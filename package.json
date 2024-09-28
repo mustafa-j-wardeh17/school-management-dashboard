@@ -9,9 +9,8 @@
   },
   "dependencies": {
     "moment": "^2.30.1",
-    "next": "14.2.5",
+    "next": "^14.2.13",
     "next-dashbaord": "file:",
-    "next-dashboard": "file:",
     "react": "^18",
     "react-big-calendar": "^1.14.1",
     "react-calendar": "^5.0.0",

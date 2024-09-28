@@ -3,7 +3,7 @@ import React from 'react'
 
 const Announcements = () => {
     return (
-        <div className='bg-white rounded-xl w-full h-full p-4'>
+        <div className='bg-white rounded-xl w-full p-4'>
             {/* TITLE */}
             <div className='flex justify-between items-center'>
                 <h1 className='text-xl font-semibold'>Announcements</h1>
