@@ -35,7 +35,7 @@ const Navbar = () => {
                         width={20}
                         height={20}
                     />
-                    <div className=' absolute -top-3 -right-3 bg-purple-500 text-white w-5 h-5 flex items-center justify-center rounded-full '>
+                    <div className=' absolute -top-2 -right-2 bg-purple-500 text-xs text-white w-4 h-4 flex items-center justify-center rounded-full '>
                         1
                     </div>
                 </div>

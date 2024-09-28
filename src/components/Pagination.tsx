@@ -11,7 +11,7 @@ const Pagination = () => {
             <button className='px-2 rounded-sm '>2</button>
             <button className='px-2 rounded-sm '>3</button>
             ...
-            <button className='px-2 rounded-sm '>4</button>
+            <button className='px-2 rounded-sm '>10</button>
         </div>
         <button className='py-2 px-4 rounded-md font-semibold text-xs disabled:cursor-not-allowed disabled:opacity-50'>
             Next
