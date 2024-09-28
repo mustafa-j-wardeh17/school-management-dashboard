@@ -1,7 +1,7 @@
 import Pagination from '@/components/Pagination'
 import Table from '@/components/Table'
 import TableSearch from '@/components/TableSearch'
-import { role, studentsData, subjectsData, teachersData } from '@/lib/data'
+import { role, subjectsData } from '@/lib/data'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
@@ -38,7 +38,7 @@ const SubjectsListPage = () => {
                     <h3 className='font-semibold'>{item.name}</h3>
                 </div>
             </td>
-            <td className="hidden md:table-cell text-xs">{item.teachers.join(", ")}</td>
+            <td className="hidden sm:table-cell text-xs">{item.teachers.join(", ")}</td>
             <td>
                 <div className='flex items-center gap-2'>
                     <Link href={`/list/subjects/${item.id}`}>

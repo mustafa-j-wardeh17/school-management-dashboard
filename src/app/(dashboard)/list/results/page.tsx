@@ -1,45 +1,58 @@
 import Pagination from '@/components/Pagination'
 import Table from '@/components/Table'
 import TableSearch from '@/components/TableSearch'
-import { classesData, role } from '@/lib/data'
+import { examsData, lessonsData, resultsData, role } from '@/lib/data'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 
 const columns = [
     {
-        header: "Class Name",
-        accessor: "className"
+        header: "Subject",
+        accessor: "subject"
     },
     {
-        header: "Capacity",
-        accessor: "capacity",
-        className: "hidden sm:table-cell",
+        header: "Student",
+        accessor: "student",
+        className: "sm:table-cell hidden",
     },
     {
-        header: "Grade",
-        accessor: "grade",
+        header: "Score",
+        accessor: "score",
+        className: "sm:table-cell hidden",
+    },
+    {
+        header: "Teacher",
+        accessor: "teacher",
+        className: "sm:table-cell hidden",
+    },
+    {
+        header: "Class",
+        accessor: "class",
+        className: "sm:table-cell hidden",
+    },
+    {
+        header: "Date",
+        accessor: "date",
         className: "table-cell",
-    },
-    {
-        header: "Supervisor",
-        accessor: "supervisor",
-        className: "hidden md:table-cell",
     },
     {
         header: "Actions",
         accessor: "actions",
     },
 ]
-export type Class = {
+export type Result = {
     id: number;
-    name: string;
-    capacity: number;
-    grade: number;
-    supervisor: string
+    subject: string;
+    class: string;
+    teacher: string;
+    student: string;
+    score: number;
+    date: string
+    type:"exam"|"assignment"
 }
-const ClassesListPage = () => {
-    const renderRow = (item: Class) => (
+const ResultsListPage = () => {
+    const renderRow = (item: Result) => (
         <tr
             key={item.id}
             className='border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-mPurpleLight'
@@ -47,19 +60,21 @@ const ClassesListPage = () => {
             <td className='flex items-center gap-4 p-4'>
 
                 <div className='flex flex-col'>
-                    <h3 className='font-semibold'>{item.name}</h3>
+                    <h3 className='font-semibold'>{item.subject}</h3>
                 </div>
             </td>
-            <td className="hidden sm:table-cell text-xs">{item.capacity}</td>
-            <td className="table-cell text-xs">{item.grade}</td>
-            <td className="hidden md:table-cell text-xs">{item.supervisor}</td>
+            <td className="hidden sm:table-cell text-xs">{item.student}</td>
+            <td className="hidden sm:table-cell text-xs">{item.score}</td>
+            <td className="hidden sm:table-cell text-xs">{item.teacher}</td>
+            <td className="hidden sm:table-cell text-xs">{item.class}</td>
+            <td className="table-cell text-xs">{item.date}</td>
             <td>
                 <div className='flex items-center gap-2'>
-                    <Link href={`/list/classes/${item.id}`}>
+                    <Link href={`/list/exams/${item.id}`}>
                         <button className='w-7 h-7 rounded-full flex items-center justify-center bg-mSky'>
                             <Image
-                                src={'/view.png'}
-                                alt={`${item.id} class`}
+                                src={'/edit.png'}
+                                alt={`${item.id} result`}
                                 width={16}
                                 height={16}
                             />
@@ -70,7 +85,7 @@ const ClassesListPage = () => {
                             <button className='w-7 h-7 rounded-full flex items-center justify-center bg-mPurple'>
                                 <Image
                                     src={'/delete.png'}
-                                    alt={`${item.id} class delete`}
+                                    alt={`${item.id} result delete`}
                                     width={16}
                                     height={16}
                                 />
@@ -85,14 +100,14 @@ const ClassesListPage = () => {
         <div className='bg-white rounded-md p-4 m-4 mt-0'>
             {/* TOP */}
             <div className='flex justify-between'>
-                <h1 className='hidden md:block text-lg font-semibold'>All Classes</h1>
+                <h1 className='hidden md:block text-lg font-semibold'>All Results</h1>
                 <div className='flex md:flex-row flex-col items-center gap-4 w-full md:w-auto'>
                     <TableSearch />
                     <div className='flex items-center gap-4 self-end'>
                         <button className='w-8 h-8 rounded-full bg-mYellow flex items-center justify-center'>
                             <Image
                                 src={'/filter.png'}
-                                alt='filter class img'
+                                alt='filter result img'
                                 width={14}
                                 height={14}
                             />
@@ -100,7 +115,7 @@ const ClassesListPage = () => {
                         <button className='w-8 h-8 rounded-full bg-mYellow flex items-center justify-center'>
                             <Image
                                 src={'/sort.png'}
-                                alt='sort class img'
+                                alt='sort result img'
                                 width={14}
                                 height={14}
                             />
@@ -108,7 +123,7 @@ const ClassesListPage = () => {
                         <button className='w-8 h-8 rounded-full bg-mYellow flex items-center justify-center'>
                             <Image
                                 src={'/plus.png'}
-                                alt='add class img'
+                                alt='add result img'
                                 width={14}
                                 height={14}
                             />
@@ -120,7 +135,7 @@ const ClassesListPage = () => {
             <Table
                 columns={columns}
                 renderRow={renderRow}
-                data={classesData}
+                data={resultsData}
             />
             {/* PAGINATION */}
             <Pagination />
@@ -128,4 +143,4 @@ const ClassesListPage = () => {
     )
 }
 
-export default ClassesListPage
+export default ResultsListPage

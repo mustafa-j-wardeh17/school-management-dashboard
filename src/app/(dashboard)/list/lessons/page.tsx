@@ -14,7 +14,7 @@ const columns = [
     {
         header: "Class",
         accessor: "class",
-        className: "hidden sm:table-cell",
+        className: "table-cell",
     },
     {
         header: "Teacher",
@@ -44,14 +44,14 @@ const LessonListPage = () => {
                     <h3 className='font-semibold'>{item.subject}</h3>
                 </div>
             </td>
-            <td className="hidden sm:table-cell text-xs">{item.class}</td>
+            <td className="table-cell text-xs">{item.class}</td>
             <td className="hidden sm:table-cell text-xs">{item.teacher}</td>
             <td>
                 <div className='flex items-center gap-2'>
                     <Link href={`/list/lessons/${item.id}`}>
                         <button className='w-7 h-7 rounded-full flex items-center justify-center bg-mSky'>
                             <Image
-                                src={'/view.png'}
+                                src={'/edit.png'}
                                 alt={`${item.id} lesson`}
                                 width={16}
                                 height={16}
