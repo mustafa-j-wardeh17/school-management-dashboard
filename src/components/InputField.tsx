@@ -26,7 +26,7 @@ const InputField = ({
                 type={type}
                 defaultValue={defaultValue}
                 {...register(name)}
-                className='ring-[1.5px] ring-gray-100 p-2 rounded-md text-sm w-full'
+                className='ring-[1.5px] ring-gray-100 p-2 rounded-md text-xs w-full'
                 {...inputProps}
             />
             {

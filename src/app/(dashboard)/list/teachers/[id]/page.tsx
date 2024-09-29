@@ -26,7 +26,7 @@ const TeacherPage = ({ params: { id } }: { params: { id: string } }) => {
               />
             </div>
             <div className="w-2/3 flex flex-col justify-between gap-4">
-              <div className='flex items-center gap-3'>
+              <div className='flex items-center gap-4'>
                 <h1 className='text-xl font-semibold'>Lorem ipsum dolor</h1>
                 {role === "admin" && <FormModal
                   table="teacher"
@@ -91,7 +91,7 @@ const TeacherPage = ({ params: { id } }: { params: { id: string } }) => {
           </div>
           {/* SMALL CARDS */}
           <div className='flex-1 flex gap-4 justify-between flex-wrap' >
-            <div className="bg-white p-4 rounded-md flex gap-4 w-full md:w-[47%] xl:w-[45%] 2xl:w-[48%]">
+            <div className="bg-white p-4 rounded-md flex gap-4 w-full md:w-[47%] xl:w-[45%] 2xl:w-[47%]">
               <Image
                 src="/singleAttendance.png"
                 alt="Teacher Attendance Image"
@@ -104,7 +104,7 @@ const TeacherPage = ({ params: { id } }: { params: { id: string } }) => {
                 <span className='text-sm text-gray-400'>Attendance</span>
               </div>
             </div>
-            <div className="bg-white p-4 rounded-md flex gap-4 w-full md:w-[47%] xl:w-[45%] 2xl:w-[48%]">
+            <div className="bg-white p-4 rounded-md flex gap-4 w-full md:w-[47%] xl:w-[45%] 2xl:w-[47%]">
               <Image
                 src="/singleBranch.png"
                 alt="Teacher Branch Image"
@@ -117,7 +117,7 @@ const TeacherPage = ({ params: { id } }: { params: { id: string } }) => {
                 <span className='text-sm text-gray-400'>Branches</span>
               </div>
             </div>
-            <div className="bg-white p-4 rounded-md flex gap-4 w-full md:w-[47%] xl:w-[45%] 2xl:w-[48%]">
+            <div className="bg-white p-4 rounded-md flex gap-4 w-full md:w-[47%] xl:w-[45%] 2xl:w-[47%]">
               <Image
                 src="/singleLesson.png"
                 alt="Teacher Lesson Image"
@@ -130,7 +130,7 @@ const TeacherPage = ({ params: { id } }: { params: { id: string } }) => {
                 <span className='text-sm text-gray-400'>Lessons</span>
               </div>
             </div>
-            <div className="bg-white p-4 rounded-md flex gap-4 w-full md:w-[47%] xl:w-[45%] 2xl:w-[48%]">
+            <div className="bg-white p-4 rounded-md flex gap-4 w-full md:w-[47%] xl:w-[45%] 2xl:w-[47%]">
               <Image
                 src="/singleClass.png"
                 alt="Teacher Attendance Image"
