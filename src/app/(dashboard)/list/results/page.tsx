@@ -1,7 +1,8 @@
+import FormModal from '@/components/FormModal'
 import Pagination from '@/components/Pagination'
 import Table from '@/components/Table'
 import TableSearch from '@/components/TableSearch'
-import { examsData, lessonsData, resultsData, role } from '@/lib/data'
+import { resultsData, role } from '@/lib/data'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
@@ -49,7 +50,7 @@ export type Result = {
     student: string;
     score: number;
     date: string
-    type:"exam"|"assignment"
+    type: "exam" | "assignment"
 }
 const ResultsListPage = () => {
     const renderRow = (item: Result) => (
@@ -70,26 +71,21 @@ const ResultsListPage = () => {
             <td className="table-cell text-xs">{item.date}</td>
             <td>
                 <div className='flex items-center gap-2'>
-                    <Link href={`/list/exams/${item.id}`}>
-                        <button className='w-7 h-7 rounded-full flex items-center justify-center bg-mSky'>
-                            <Image
-                                src={'/edit.png'}
-                                alt={`${item.id} result`}
-                                width={16}
-                                height={16}
-                            />
-                        </button>
-                    </Link>
                     {
                         role === 'admin' && (
-                            <button className='w-7 h-7 rounded-full flex items-center justify-center bg-mPurple'>
-                                <Image
-                                    src={'/delete.png'}
-                                    alt={`${item.id} result delete`}
-                                    width={16}
-                                    height={16}
+                            <>
+                                <FormModal
+                                    table='result'
+                                    type='update'
+                                    data={item}
                                 />
-                            </button>
+                                <FormModal
+                                    table='result'
+                                    type='delete'
+                                    id={item.id}
+                                />
+                            </>
+
                         )
                     }
                 </div>
@@ -120,14 +116,14 @@ const ResultsListPage = () => {
                                 height={14}
                             />
                         </button>
-                        <button className='w-8 h-8 rounded-full bg-mYellow flex items-center justify-center'>
-                            <Image
-                                src={'/plus.png'}
-                                alt='add result img'
-                                width={14}
-                                height={14}
-                            />
-                        </button>
+                        {
+                            role === 'admin' && (
+                                <FormModal
+                                    table='result'
+                                    type='create'
+                                />
+                            )
+                        }
                     </div>
                 </div>
             </div>

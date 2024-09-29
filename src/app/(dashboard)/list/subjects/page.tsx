@@ -1,3 +1,4 @@
+import FormModal from '@/components/FormModal'
 import Pagination from '@/components/Pagination'
 import Table from '@/components/Table'
 import TableSearch from '@/components/TableSearch'
@@ -41,26 +42,21 @@ const SubjectsListPage = () => {
             <td className="hidden sm:table-cell text-xs">{item.teachers.join(", ")}</td>
             <td>
                 <div className='flex items-center gap-2'>
-                    <Link href={`/list/subjects/${item.id}`}>
-                        <button className='w-7 h-7 rounded-full flex items-center justify-center bg-mSky'>
-                            <Image
-                                src={'/view.png'}
-                                alt={`${item.id} subject`}
-                                width={16}
-                                height={16}
-                            />
-                        </button>
-                    </Link>
                     {
                         role === 'admin' && (
-                            <button className='w-7 h-7 rounded-full flex items-center justify-center bg-mPurple'>
-                                <Image
-                                    src={'/delete.png'}
-                                    alt={`${item.id} subject delete`}
-                                    width={16}
-                                    height={16}
+                            <>
+                                <FormModal
+                                    table='subject'
+                                    type='update'
+                                    data={item}
                                 />
-                            </button>
+                                <FormModal
+                                    table='subject'
+                                    type='delete'
+                                    id={item.id}
+                                />
+                            </>
+
                         )
                     }
                 </div>
@@ -91,14 +87,14 @@ const SubjectsListPage = () => {
                                 height={14}
                             />
                         </button>
-                        <button className='w-8 h-8 rounded-full bg-mYellow flex items-center justify-center'>
-                            <Image
-                                src={'/plus.png'}
-                                alt='add subject img'
-                                width={14}
-                                height={14}
-                            />
-                        </button>
+                        {
+                            role === 'admin' && (
+                                <FormModal
+                                    table='subject'
+                                    type='create'
+                                />
+                            )
+                        }
                     </div>
                 </div>
             </div>

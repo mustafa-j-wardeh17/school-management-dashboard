@@ -1,3 +1,4 @@
+import FormModal from '@/components/FormModal'
 import Pagination from '@/components/Pagination'
 import Table from '@/components/Table'
 import TableSearch from '@/components/TableSearch'
@@ -48,26 +49,21 @@ const AnnouncementsListPage = () => {
             <td className="hidden sm:table-cell text-xs">{item.date}</td>
             <td>
                 <div className='flex items-center gap-2'>
-                    <Link href={`/list/announcements/${item.id}`}>
-                        <button className='w-7 h-7 rounded-full flex items-center justify-center bg-mSky'>
-                            <Image
-                                src={'/edit.png'}
-                                alt={`${item.id} announcement`}
-                                width={16}
-                                height={16}
-                            />
-                        </button>
-                    </Link>
                     {
                         role === 'admin' && (
-                            <button className='w-7 h-7 rounded-full flex items-center justify-center bg-mPurple'>
-                                <Image
-                                    src={'/delete.png'}
-                                    alt={`${item.id} announcement delete`}
-                                    width={16}
-                                    height={16}
+                            <>
+                                <FormModal
+                                    table='announcement'
+                                    type='update'
+                                    data={item}
                                 />
-                            </button>
+                                <FormModal
+                                    table='announcement'
+                                    type='delete'
+                                    id={item.id}
+                                />
+                            </>
+
                         )
                     }
                 </div>
@@ -98,14 +94,14 @@ const AnnouncementsListPage = () => {
                                 height={14}
                             />
                         </button>
-                        <button className='w-8 h-8 rounded-full bg-mYellow flex items-center justify-center'>
-                            <Image
-                                src={'/plus.png'}
-                                alt='add announcement img'
-                                width={14}
-                                height={14}
-                            />
-                        </button>
+                        {
+                            role === 'admin' && (
+                                <FormModal
+                                    table='announcement'
+                                    type='create'
+                                />
+                            )
+                        }
                     </div>
                 </div>
             </div>
