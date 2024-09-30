@@ -1,6 +1,8 @@
+'use client'
 import { role } from "@/lib/data";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const menuItems = [
   {
@@ -117,41 +119,39 @@ const menuItems = [
   },
 ];
 
-
 export const Menu = () => {
+  const pathname = usePathname(); // Get the current path
+
   return (
     <div className="mt-4 text-sm">
-      {
-        menuItems.map(i => (
-          <div
-            key={i.title}
-            className="flex flex-col gap-2"
-          >
-            <span className="hidden lg:block text-gray-400 font-light my-4">{i.title}</span>
-            {
-              i.items.map(item => {
-                if (item.visible.includes(role)) {
-                  return (
-                    <Link
-                      key={`nav-${item.label}`}
-                      href={item.href}
-                      className="flex items-center justify-center lg:justify-start gap-4 text-gray-500 py-2 md:px-2 rounded-md hover:bg-mSkyLight"
-                    >
-                      <Image
-                        src={item.icon}
-                        alt={`item-${item.label}`}
-                        width={20}
-                        height={20}
-                      />
-                      <span className="hidden lg:block">{item.label}</span>
-                    </Link>
-                  )
-                }
-              })
+      {menuItems.map((i) => (
+        <div key={i.title} className="flex flex-col gap-2">
+          <span className="hidden lg:block text-gray-400 font-light my-4">
+            {i.title}
+          </span>
+          {i.items.map((item) => {
+            if (item.visible.includes(role)) {
+              const isActive = pathname === item.href; // Check if the current path matches the item's href
+              return (
+                <Link
+                  key={`nav-${item.label}`}
+                  href={item.href}
+                  className={`flex items-center justify-center lg:justify-start gap-4 text-gray-500 py-2 md:px-2 rounded-md hover:bg-mSkyLight ${isActive ? "bg-mSkyLight" : ""
+                    }`} // Add bg-mSkyLight if the link is active
+                >
+                  <Image
+                    src={item.icon}
+                    alt={`item-${item.label}`}
+                    width={20}
+                    height={20}
+                  />
+                  <span className="hidden lg:block">{item.label}</span>
+                </Link>
+              );
             }
-          </div>
-        ))
-      }
+          })}
+        </div>
+      ))}
     </div>
-  )
-}
+  );
+};
