@@ -3,8 +3,8 @@ import Pagination from '@/components/Pagination'
 import Table from '@/components/Table'
 import TableSearch from '@/components/TableSearch'
 import { classesData, role } from '@/lib/data'
+import { Class, Grade, Teacher } from '@prisma/client'
 import Image from 'next/image'
-import Link from 'next/link'
 import React from 'react'
 
 const columns = [
@@ -32,51 +32,50 @@ const columns = [
         accessor: "actions",
     },
 ]
-export type Class = {
-    id: number;
-    name: string;
-    capacity: number;
-    grade: number;
-    supervisor: string
-}
-const ClassesListPage = () => {
-    const renderRow = (item: Class) => (
-        <tr
-            key={item.id}
-            className='border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-mPurpleLight'
-        >
-            <td className='flex items-center gap-4 p-4'>
+type ClassList = Class & { supervisor: Teacher } & { grade: Grade }
+const renderRow = (item: ClassList) => (
+    <tr
+        key={item.id}
+        className='border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-mPurpleLight'
+    >
+        <td className='flex items-center gap-4 p-4'>
 
-                <div className='flex flex-col'>
-                    <h3 className='font-semibold'>{item.name}</h3>
-                </div>
-            </td>
-            <td className="hidden sm:table-cell text-xs">{item.capacity}</td>
-            <td className="table-cell text-xs">{item.grade}</td>
-            <td className="hidden md:table-cell text-xs">{item.supervisor}</td>
-            <td>
-                <div className='flex items-center gap-2'>
-                    {
-                        role === 'admin' && (
-                            <>
-                                <FormModal
-                                    table='class'
-                                    type='update'
-                                    data={item}
-                                />
-                                <FormModal
-                                    table='class'
-                                    type='delete'
-                                    id={item.id}
-                                />
-                            </>
+            <div className='flex flex-col'>
+                <h3 className='font-semibold'>{item.name}</h3>
+            </div>
+        </td>
+        <td className="hidden sm:table-cell text-xs">{item.capacity}</td>
+        <td className="table-cell text-xs">{item.grade.level}</td>
+        <td className="hidden md:table-cell text-xs">{item.supervisor.name}</td>
+        <td>
+            <div className='flex items-center gap-2'>
+                {
+                    role === 'admin' && (
+                        <>
+                            <FormModal
+                                table='class'
+                                type='update'
+                                data={item}
+                            />
+                            <FormModal
+                                table='class'
+                                type='delete'
+                                id={item.id}
+                            />
+                        </>
 
-                        )
-                    }
-                </div>
-            </td>
-        </tr>
-    )
+                    )
+                }
+            </div>
+        </td>
+    </tr>
+)
+const ClassesListPage = async ({ searchParams }: {
+    searchParams: { [key: string]: string | undefined }
+}) => {
+    const { page, ...queryParams } = searchParams
+    const p = page ? parseInt(page) : 1
+
     return (
         <div className='bg-white rounded-md p-4 m-4 mt-0'>
             {/* TOP */}
