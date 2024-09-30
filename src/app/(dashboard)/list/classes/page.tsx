@@ -3,7 +3,9 @@ import Pagination from '@/components/Pagination'
 import Table from '@/components/Table'
 import TableSearch from '@/components/TableSearch'
 import { classesData, role } from '@/lib/data'
-import { Class, Grade, Teacher } from '@prisma/client'
+import prisma from '@/lib/prisma'
+import { ITEMS_PER_PAGE } from '@/lib/settings'
+import { Class, Grade, Prisma, Teacher } from '@prisma/client'
 import Image from 'next/image'
 import React from 'react'
 
@@ -76,6 +78,38 @@ const ClassesListPage = async ({ searchParams }: {
     const { page, ...queryParams } = searchParams
     const p = page ? parseInt(page) : 1
 
+    const filter: Prisma.ClassWhereInput = {}
+    if (queryParams) {
+        for (const [key, value] of Object.entries(queryParams)) {
+            if (value != undefined) {
+                switch (key) {
+                    case 'supervisorId':
+                        filter.supervisorId = value
+                        break;
+                    case 'search':
+                        filter.name = { contains: value, mode: 'insensitive' }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    }
+
+    const [data, count] = await prisma.$transaction([
+        prisma.class.findMany({
+            where: filter,
+            include: {
+                supervisor: true,
+                grade: true
+            },
+            take: ITEMS_PER_PAGE,
+            skip: ITEMS_PER_PAGE * (p - 1)
+        }),
+        prisma.class.count({
+            where: filter
+        })
+    ])
     return (
         <div className='bg-white rounded-md p-4 m-4 mt-0'>
             {/* TOP */}
@@ -115,10 +149,13 @@ const ClassesListPage = async ({ searchParams }: {
             <Table
                 columns={columns}
                 renderRow={renderRow}
-                data={classesData}
+                data={data}
             />
             {/* PAGINATION */}
-            <Pagination />
+            <Pagination
+                page={p}
+                count={count}
+            />
         </div>
     )
 }
