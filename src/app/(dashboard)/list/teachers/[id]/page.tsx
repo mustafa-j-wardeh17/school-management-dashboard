@@ -178,7 +178,7 @@ const TeacherPage = ({ params: { id } }: { params: { id: string } }) => {
               Teacher&apos;s Exams
             </Link>
             <Link
-              href={`/list/assignments?teacherId=${'teacher2'}`}
+              href={`/list/assignments?teacherId=${'teacher12'}`}
               className='p-3 rounded-md bg-mSkyLight'>
               Teacher&apos;s Assignments
             </Link>
