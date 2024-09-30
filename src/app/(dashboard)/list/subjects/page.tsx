@@ -75,6 +75,9 @@ const SubjectsListPage = async ({ searchParams }: {
                 switch (key) {
                     case 'search':
                         filter.name = { contains: value, mode: "insensitive" }
+                        break;
+                    default:
+                        break;
                 }
             }
         }

@@ -178,7 +178,7 @@ const StudentPage = ({ params: { id } }: { params: { id: string } }) => {
                             Student&apos;s Assignments
                         </Link>
                         <Link
-                            href={`/list/results?classId=${2}`}
+                            href={`/list/results?studentId=${"student2"}`}
                             className='p-3 rounded-md bg-mYellowLight'>
                             Student&apos;s Results
                         </Link>
