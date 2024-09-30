@@ -158,27 +158,27 @@ const TeacherPage = ({ params: { id } }: { params: { id: string } }) => {
           <h1 className='text-xl font-semibold'>Shortcuts</h1>
           <div className='mt-4 flex gap-4 flex-wrap text-xs text-gray-500'>
             <Link
-              href='/'
+              href={`/list/classes?supervisorId=${'teacher12'}`}
               className='p-3 rounded-md bg-mSkyLight'>
               Teacher&apos;s Classes
             </Link>
             <Link
-              href='/'
+              href={`/list/students?teacherId=${'teacher2'}`}
               className='p-3 rounded-md bg-mPurpleLight'>
               Teacher&apos;s Students
             </Link>
             <Link
-              href='/'
+              href={`/list/lessons?teacherId=${'teacher2'}`}
               className='p-3 rounded-md bg-mYellowLight'>
               Teacher&apos;s Lessons
             </Link>
             <Link
-              href='/'
+              href={`/list/exams?teacherId=${'teacher2'}`}
               className='p-3 rounded-md bg-pink-50'>
               Teacher&apos;s Exams
             </Link>
             <Link
-              href='/'
+              href={`/list/assignments?teacherId=${'teacher2'}`}
               className='p-3 rounded-md bg-mSkyLight'>
               Teacher&apos;s Assignments
             </Link>

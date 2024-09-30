@@ -48,7 +48,7 @@ const renderRow = (item: ClassList) => (
         </td>
         <td className="hidden sm:table-cell text-xs">{item.capacity}</td>
         <td className="table-cell text-xs">{item.grade.level}</td>
-        <td className="hidden md:table-cell text-xs">{item.supervisor.name}</td>
+        <td className="hidden md:table-cell text-xs">{item.supervisor.name + " " + item.supervisor.surname}</td>
         <td>
             <div className='flex items-center gap-2'>
                 {

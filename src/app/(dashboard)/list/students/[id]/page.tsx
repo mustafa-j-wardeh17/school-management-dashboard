@@ -157,7 +157,7 @@ const StudentPage = ({ params: { id } }: { params: { id: string } }) => {
                     <h1 className='text-xl font-semibold'>Shortcuts</h1>
                     <div className='mt-4 flex gap-4 flex-wrap text-xs text-gray-500'>
                         <Link
-                            href='/'
+                            href={`/list/lessons?classId=${2}`}
                             className='p-3 rounded-md bg-mSkyLight'>
                             Student&apos;s Lessons
                         </Link>
