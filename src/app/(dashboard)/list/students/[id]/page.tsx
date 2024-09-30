@@ -166,20 +166,21 @@ const StudentPage = ({ params: { id } }: { params: { id: string } }) => {
                             className='p-3 rounded-md bg-mPurpleLight'>
                             Student&apos;s Teachers
                         </Link>
+
                         <Link
-                            href='/'
-                            className='p-3 rounded-md bg-mYellowLight'>
-                            Student&apos;s Results
-                        </Link>
-                        <Link
-                            href='/'
+                            href={`/list/exams?classId=${2}`}
                             className='p-3 rounded-md bg-pink-50'>
                             Student&apos;s Exams
                         </Link>
                         <Link
-                            href='/'
+                            href={`/list/assignments?classId=${2}`}
                             className='p-3 rounded-md bg-mSkyLight'>
                             Student&apos;s Assignments
+                        </Link>
+                        <Link
+                            href={`/list/results?classId=${2}`}
+                            className='p-3 rounded-md bg-mYellowLight'>
+                            Student&apos;s Results
                         </Link>
                     </div>
                 </div>
