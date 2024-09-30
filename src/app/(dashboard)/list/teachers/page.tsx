@@ -2,7 +2,7 @@ import FormModal from '@/components/FormModal'
 import Pagination from '@/components/Pagination'
 import Table from '@/components/Table'
 import TableSearch from '@/components/TableSearch'
-import { role, teachersData } from '@/lib/data'
+import { role } from '@/lib/data'
 import prisma from '@/lib/prisma'
 import { ITEMS_PER_PAGE } from '@/lib/settings'
 import { Class, Prisma, Subject, Teacher } from '@prisma/client'
@@ -10,7 +10,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 
-type TeacherList = Teacher & { subjects: Subject[] } & { classes: Class[] }
 
 const columns = [
     {
@@ -47,6 +46,7 @@ const columns = [
         accessor: "actions",
     },
 ]
+type TeacherList = Teacher & { subjects: Subject[] } & { classes: Class[] }
 
 const renderRow = (item: TeacherList) => (
     <tr
@@ -136,7 +136,7 @@ const TeacherListPage = async ({ searchParams }: {
                         break;
                     case "search":
                         // using contains to filter by containg value in name
-                        filter.name = { contains: value, mode: "insensitive" };
+                        filter.name = { contains: value, mode: 'insensitive' };
                         break;
                     default:
                         break;
