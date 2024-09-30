@@ -125,9 +125,21 @@ const TeacherListPage = async ({ searchParams }: {
     const filter: Prisma.TeacherWhereInput = {}
     if (queryParams) {
         for (const [key, value] of Object.entries(queryParams)) {
-            if (value != undefined) {
+            if (value !== undefined) {
                 switch (key) {
-                    case "classId": { filter.lessons = { some: { classId: parseInt(value) } } }
+                    case "classId":
+                        filter.lessons = {
+                            some: {
+                                classId: parseInt(value),
+                            },
+                        };
+                        break;
+                    case "search":
+                        // using contains to filter by containg value in name
+                        filter.name = { contains: value, mode: "insensitive" };
+                        break;
+                    default:
+                        break;
                 }
             }
         }
