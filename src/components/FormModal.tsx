@@ -69,7 +69,7 @@ interface FormModalProps {
     table: "teacher" | "student" | "parent" | "subject" | "class" | "lesson" | "exam" | "assignment" | "result" | "attendance" | "event" | "announcement";
     type: "create" | "update" | "delete";
     data?: any;
-    id?: number
+    id?: string | number
 }
 const FormModal = ({ table, type, data, id }: FormModalProps) => {
     const [open, setOpen] = useState(false)

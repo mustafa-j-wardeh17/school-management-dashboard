@@ -3,9 +3,14 @@ import Pagination from '@/components/Pagination'
 import Table from '@/components/Table'
 import TableSearch from '@/components/TableSearch'
 import { role, teachersData } from '@/lib/data'
+import prisma from '@/lib/prisma'
+import { ITEMS_PER_PAGE } from '@/lib/settings'
+import { Class, Prisma, Subject, Teacher } from '@prisma/client'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
+
+type TeacherList = Teacher & { subjects: Subject[] } & { classes: Class[] }
 
 const columns = [
     {
@@ -15,7 +20,7 @@ const columns = [
     {
         header: "Teacher ID",
         accessor: "teacherId",
-        className: "hidden md:table-cell",
+        className: "hidden xl:table-cell",
     },
     {
         header: "Subjects",
@@ -35,73 +40,113 @@ const columns = [
     {
         header: "Address",
         accessor: "address",
-        className: "hidden lg:table-cell",
+        className: "hidden xl:table-cell",
     },
     {
         header: "Actions",
         accessor: "actions",
     },
 ]
-export type Teacher = {
-    id: number;
-    teacherId: string;
-    name: string;
-    email?: string;
-    photo: string;
-    phone: string;
-    subjects: string[];
-    classes: string[];
-    address: string;
-}
-const TeacherListPage = () => {
-    const renderRow = (item: Teacher) => (
-        <tr
-            key={item.id}
-            className='border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-mPurpleLight'
-        >
-            <td className='flex items-center gap-4 p-4'>
-                <Image
-                    src={item.photo}
-                    alt={`photo for ${item.id}`}
-                    width={40}
-                    height={40}
-                    className='md:hidden xl:block w-10 h-10 rounded-full object-cover'
-                />
-                <div className='flex flex-col'>
-                    <h3 className='font-semibold'>{item.name}</h3>
-                    <p className='text-xs text-gray-500'>{item?.email}</p>
-                </div>
-            </td>
-            <td className="hidden md:table-cell text-xs">{item.teacherId}</td>
-            <td className="hidden md:table-cell text-xs">{item.subjects.join(',')}</td>
-            <td className="hidden md:table-cell text-xs">{item.classes.join(',')}</td>
-            <td className="hidden lg:table-cell text-xs">{item.phone}</td>
-            <td className="hidden lg:table-cell text-xs">{item.address}</td>
-            <td>
-                <div className='flex items-center gap-2'>
-                    <Link href={`/list/teachers/${item.id}`}>
-                        <button className='w-7 h-7 rounded-full flex items-center justify-center bg-mSky'>
-                            <Image
-                                src={'/view.png'}
-                                alt={`${item.id} teacher`}
-                                width={16}
-                                height={16}
-                            />
-                        </button>
-                    </Link>
-                    {
-                        role === 'admin' && (
-                            <FormModal
-                                table='teacher'
-                                type='delete'
-                                id={item.id}
-                            />
-                        )
-                    }
-                </div>
-            </td>
-        </tr>
-    )
+
+const renderRow = (item: TeacherList) => (
+    <tr
+        key={item.id}
+        className='border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-mPurpleLight'
+    >
+        <td className='flex items-center gap-4 p-4'>
+            <Image
+                src={item.img || '/noAvatar.png'}
+                alt={`photo for ${item.id}`}
+                width={40}
+                height={40}
+                className='md:hidden xl:block w-10 h-10 rounded-full object-cover'
+            />
+            <div className='flex flex-col'>
+                <h3 className='font-semibold'>{item.name}</h3>
+                <p className='text-xs text-gray-500'>{item?.email}</p>
+            </div>
+        </td>
+        <td className="hidden xl:table-cell text-xs">{item.username}</td>
+        <td className="hidden md:table-cell text-xs">{item.subjects.map(subject => subject.name).join(",")}</td>
+        <td className="hidden md:table-cell text-xs">{item.classes.map(classItem => classItem.name).join(",")}</td>
+        <td className="hidden lg:table-cell text-xs">{item.phone}</td>
+        <td className="hidden xl:table-cell text-xs">{item.address}</td>
+        <td>
+            <div className='flex items-center gap-2'>
+                <Link href={`/list/teachers/${item.id}`}>
+                    <button className='w-7 h-7 rounded-full flex items-center justify-center bg-mSky'>
+                        <Image
+                            src={'/view.png'}
+                            alt={`${item.id} teacher`}
+                            width={16}
+                            height={16}
+                        />
+                    </button>
+                </Link>
+                {
+                    role === 'admin' && (
+                        <FormModal
+                            table='teacher'
+                            type='delete'
+                            id={item.id}
+                        />
+                    )
+                }
+            </div>
+        </td>
+    </tr>
+)
+const TeacherListPage = async ({ searchParams }: {
+    searchParams: { [key: string]: string | undefined }
+}) => {
+    const { page, ...queryParams } = searchParams
+    const p = page ? parseInt(page) : 1
+
+    //------------------------------------
+    //--------------1st Way---------------
+    //------------------------------------
+    // const data = await prisma.teacher.findMany({
+    //     include: {
+    //         subjects: true,
+    //         classes: true
+    //     },
+    //     take: ITEMS_PER_PAGE,
+    //     skip: ITEMS_PER_PAGE * (p - 1)
+    // })
+
+    // Total number of teachers in schema
+    // const count = await prisma.teacher.count()
+
+    // we have another way to fetching data and count in single function
+    //------------------------------------
+    //--------------2nd Way---------------
+    //------------------------------------
+
+    const filter: Prisma.TeacherWhereInput = {}
+    if (queryParams) {
+        for (const [key, value] of Object.entries(queryParams)) {
+            if (value != undefined) {
+                switch (key) {
+                    case "classId": { filter.lessons = { some: { classId: parseInt(value) } } }
+                }
+            }
+        }
+    }
+
+    const [data, count] = await prisma.$transaction([
+        prisma.teacher.findMany({
+            where: filter,
+            include: {
+                classes: true,
+                subjects: true,
+            },
+            take: ITEMS_PER_PAGE,
+            skip: ITEMS_PER_PAGE * (p - 1)
+        }),
+        prisma.teacher.count({
+            where: filter
+        })
+    ])
     return (
         <div className='bg-white rounded-md p-4 m-4 mt-0'>
             {/* TOP */}
@@ -141,10 +186,13 @@ const TeacherListPage = () => {
             <Table
                 columns={columns}
                 renderRow={renderRow}
-                data={teachersData}
+                data={data}
             />
             {/* PAGINATION */}
-            <Pagination />
+            <Pagination
+                page={p}
+                count={count}
+            />
         </div>
     )
 }

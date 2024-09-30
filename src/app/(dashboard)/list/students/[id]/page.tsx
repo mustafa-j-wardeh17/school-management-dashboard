@@ -162,7 +162,7 @@ const StudentPage = ({ params: { id } }: { params: { id: string } }) => {
                             Student&apos;s Lessons
                         </Link>
                         <Link
-                            href='/'
+                            href={`/list/teachers?classId=${2}`}
                             className='p-3 rounded-md bg-mPurpleLight'>
                             Student&apos;s Teachers
                         </Link>
