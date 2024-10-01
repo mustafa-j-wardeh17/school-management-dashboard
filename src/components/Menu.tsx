@@ -1,5 +1,5 @@
 'use client'
-import { role } from "@/lib/data";
+import { useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -122,6 +122,8 @@ const menuItems = [
 export const Menu = () => {
   const pathname = usePathname(); // Get the current path
 
+  const { user } = useUser()
+  const role = user?.publicMetadata.role as string;
   return (
     <div className="mt-4 text-sm">
       {menuItems.map((i) => (
