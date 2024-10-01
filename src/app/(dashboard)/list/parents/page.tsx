@@ -2,9 +2,9 @@ import FormModal from '@/components/FormModal'
 import Pagination from '@/components/Pagination'
 import Table from '@/components/Table'
 import TableSearch from '@/components/TableSearch'
-import { role } from '@/lib/data'
 import prisma from '@/lib/prisma'
 import { ITEMS_PER_PAGE } from '@/lib/settings'
+import { role } from '@/lib/utils'
 import { Parent, Prisma, Student } from '@prisma/client'
 import Image from 'next/image'
 import React from 'react'
@@ -29,10 +29,15 @@ const columns = [
         accessor: "address",
         className: "hidden lg:table-cell",
     },
-    {
-        header: "Actions",
-        accessor: "actions",
-    },
+    ...(role === 'admin' ?
+        [
+            {
+                header: "Actions",
+                accessor: "actions",
+            }
+        ]
+        : []
+    )
 ]
 
 type ParentList = Parent & { students: Student[] };

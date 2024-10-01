@@ -55,7 +55,7 @@ const renderRow = (item: AssignmentList) => (
         <td className='flex items-center gap-4 p-4'>
 
             <div className='flex flex-col'>
-                <h3 className='font-semibold'>{item.title}</h3>
+                <h3 className='font-semibold'>{item.lesson.subject.name}</h3>
             </div>
         </td>
         <td className="hidden sm:table-cell text-xs">{item.lesson.class.name}</td>
@@ -127,6 +127,24 @@ const AssignmentsListPage = async ({ searchParams }: {
             break;
         case 'teacher':
             filter.lesson.teacherId = currentUserId!;
+            break;
+        case 'student':
+            filter.lesson.class = {
+                students: {
+                    some: {
+                        id: currentUserId!
+                    }
+                }
+            };
+            break;
+        case 'parent':
+            filter.lesson.class = {
+                students: {
+                    some: {
+                        parentId: currentUserId!
+                    }
+                }
+            };
             break;
         default:
             break;

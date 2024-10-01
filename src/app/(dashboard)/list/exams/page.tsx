@@ -2,9 +2,9 @@ import FormModal from '@/components/FormModal'
 import Pagination from '@/components/Pagination'
 import Table from '@/components/Table'
 import TableSearch from '@/components/TableSearch'
-import { examsData, role } from '@/lib/data'
 import prisma from '@/lib/prisma'
 import { ITEMS_PER_PAGE } from '@/lib/settings'
+import { currentUserId, role } from '@/lib/utils'
 import { Class, Exam, Prisma, Subject, Teacher } from '@prisma/client'
 import Image from 'next/image'
 import React from 'react'
@@ -29,10 +29,13 @@ const columns = [
         accessor: "date",
         className: "sm:table-cell hidden",
     },
-    {
-        header: "Actions",
-        accessor: "actions",
-    },
+    ...((role === "admin" || role === 'teacher')
+        ? [{
+            header: "Actions",
+            accessor: "actions",
+        }]
+        : []
+    )
 ]
 type ExamList = Exam & {
     lesson: {
@@ -55,7 +58,7 @@ const renderRow = (item: ExamList) => (
         <td>
             <div className='flex items-center gap-2'>
                 {
-                    role === 'admin' && (
+                    (role === 'admin' || role === 'teacher') && (
                         <>
                             <FormModal
                                 table='exam'
@@ -108,6 +111,36 @@ const ExamsListPage = async ({ searchParams }: {
             }
         }
     }
+
+    // ROLE CONDITIONS
+
+    switch (role) {
+        case 'admin':
+            break;
+        case 'teacher':
+            filter.lesson.teacherId = currentUserId!
+            break;
+        case 'student':
+            filter.lesson.class = {
+                students: {
+                    some: {
+                        id: currentUserId!
+                    }
+                }
+            }
+            break;
+        case 'parent':
+            filter.lesson.class = {
+                students: {
+                    some: {
+                        parentId: currentUserId!
+                    }
+                }
+            }
+            break;
+        default:
+            break;
+    }
     const [data, count] = await prisma.$transaction([
         prisma.exam.findMany({
             where: filter,
@@ -150,7 +183,7 @@ const ExamsListPage = async ({ searchParams }: {
                             />
                         </button>
                         {
-                            role === 'admin' && (
+                            (role === 'admin' || role === 'teacher') && (
                                 <FormModal
                                     table='exam'
                                     type='create'

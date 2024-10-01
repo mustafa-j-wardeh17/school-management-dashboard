@@ -4,7 +4,7 @@ import Table from '@/components/Table'
 import TableSearch from '@/components/TableSearch'
 import prisma from '@/lib/prisma'
 import { ITEMS_PER_PAGE } from '@/lib/settings'
-import { role } from '@/lib/utils'
+import { currentUserId, role } from '@/lib/utils'
 import { Announcement, Class, Prisma } from '@prisma/client'
 import Image from 'next/image'
 import React from 'react'
@@ -47,7 +47,7 @@ const renderRow = (item: AnnouncementList) => (
                 <h3 className='font-semibold'>{item.title}</h3>
             </div>
         </td>
-        <td className="hidden sm:table-cell text-xs">{item.class.name}</td>
+        <td className="hidden sm:table-cell text-xs">{item.class?.name||"-"}</td>
         <td className="hidden sm:table-cell text-xs">
             {new Intl.DateTimeFormat('en-US').format(item.date)}
         </td>
@@ -96,6 +96,20 @@ const AnnouncementsListPage = async ({ searchParams }: {
             }
         }
     }
+    // ROLE CONDITIONS
+
+    const roleConditions = {
+        teacher: { lessons: { some: { teacherId: currentUserId! } } },
+        student: { students: { some: { id: currentUserId! } } },
+        parent: { students: { some: { parentId: currentUserId! } } },
+    };
+
+    filter.OR = [
+        { classId: null },
+        {
+            class: roleConditions[role as keyof typeof roleConditions] || {},
+        },
+    ];
     const [data, count] = await prisma.$transaction([
         prisma.announcement.findMany({
             where: filter,
