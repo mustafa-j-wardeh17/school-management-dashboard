@@ -2,12 +2,14 @@ import FormModal from '@/components/FormModal'
 import Pagination from '@/components/Pagination'
 import Table from '@/components/Table'
 import TableSearch from '@/components/TableSearch'
-import { assignmentsData, role } from '@/lib/data'
 import prisma from '@/lib/prisma'
 import { ITEMS_PER_PAGE } from '@/lib/settings'
-import { Announcement, Assignment, Class, Prisma, Subject, Teacher } from '@prisma/client'
+import { currentUserId, role } from '@/lib/utils'
+import { Assignment, Class, Prisma, Subject, Teacher } from '@prisma/client'
 import Image from 'next/image'
 import React from 'react'
+
+
 
 const columns = [
     {
@@ -29,10 +31,13 @@ const columns = [
         accessor: "date",
         className: "sm:table-cell hidden",
     },
-    {
-        header: "Actions",
-        accessor: "actions",
-    },
+    ...((role === "admin" || role === 'teacher')
+        ? [{
+            header: "Actions",
+            accessor: "actions",
+        }]
+        : []
+    )
 ]
 
 type AssignmentList = Assignment & {
@@ -63,7 +68,7 @@ const renderRow = (item: AssignmentList) => (
         <td>
             <div className='flex items-center gap-2'>
                 {
-                    role === 'admin' && (
+                    (role === 'admin' || role === 'teacher') && (
                         <>
                             <FormModal
                                 table='assignment'
@@ -115,6 +120,17 @@ const AssignmentsListPage = async ({ searchParams }: {
             }
         }
     }
+
+    // ROLE CONDITIONS
+    switch (role) {
+        case 'admin':
+            break;
+        case 'teacher':
+            filter.lesson.teacherId = currentUserId!;
+            break;
+        default:
+            break;
+    }
     const [data, count] = await prisma.$transaction([
         prisma.assignment.findMany({
             where: filter,
@@ -157,7 +173,7 @@ const AssignmentsListPage = async ({ searchParams }: {
                             />
                         </button>
                         {
-                            role === 'admin' && (
+                            role === 'admin' || role === 'teacher' && (
                                 <FormModal
                                     table='assignment'
                                     type='create'
