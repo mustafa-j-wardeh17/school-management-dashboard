@@ -1,3 +1,4 @@
+import { UserButton } from '@clerk/nextjs'
 import Image from 'next/image'
 import React from 'react'
 
@@ -43,14 +44,14 @@ const Navbar = () => {
                     <span className='text-xs leading-3 font-medium'>Mustafa Wardeh</span>
                     <span className='text-right text-[10px] text-gray-500'>Admin</span>
                 </div>
-                <Image
+                {/* <Image
                     src={'/avatar.png'}
                     alt='avatar img'
                     width={36}
                     height={36}
                     className='rounded-full'
-                />
-
+                /> */}
+                <UserButton />
 
             </div>
         </div>
