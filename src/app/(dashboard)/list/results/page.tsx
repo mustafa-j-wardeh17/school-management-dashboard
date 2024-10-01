@@ -4,7 +4,7 @@ import Table from '@/components/Table'
 import TableSearch from '@/components/TableSearch'
 import prisma from '@/lib/prisma'
 import { ITEMS_PER_PAGE } from '@/lib/settings'
-import { role } from '@/lib/utils'
+import { currentUserId, role } from '@/lib/utils'
 import { Prisma } from '@prisma/client'
 import Image from 'next/image'
 import React from 'react'
@@ -127,6 +127,29 @@ const ResultsListPage = async ({ searchParams }: {
             }
         }
     }
+
+    // ROLE CONSDITIONS
+    switch (role) {
+        case "admin":
+            break;
+        case "teacher":
+            filter.OR = [
+                { exam: { lesson: { teacherId: currentUserId! } } },
+                { assignment: { lesson: { teacherId: currentUserId! } } }
+            ]
+            break;
+        case "student":
+            filter.studentId = currentUserId!;
+            break;
+        case "parent":
+            filter.student = { parentId: currentUserId! }
+            break;
+        default:
+            break;
+    }
+
+
+
     const [dataRes, count] = await prisma.$transaction([
         prisma.result.findMany({
             where: filter,
@@ -201,7 +224,7 @@ const ResultsListPage = async ({ searchParams }: {
                             />
                         </button>
                         {
-                            role === 'admin' && (
+                            (role === 'admin' || role === 'teacher') && (
                                 <FormModal
                                     table='result'
                                     type='create'
