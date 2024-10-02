@@ -16,7 +16,7 @@
 <ul>
   <li><strong>Prisma ORM</strong>: Object-Relational Mapping tool to interact with the PostgreSQL database</li>
   <li><strong>PostgreSQL</strong>: Database used for storing the application data</li>
-  <li><strong>Node.js</strong>: Runtime environment for building the backend server</li>
+  <li><strong>Next.js</strong>: Runtime environment for building the backend server</li>
 </ul>
 
 ## Project Structure
