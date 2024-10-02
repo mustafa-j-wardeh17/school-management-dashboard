@@ -6,7 +6,7 @@
 
 <p>Below is a visual representation of the database schema:</p>
 
-<img src="./public/schema.svg" alt="Database Schema" style="width:100vw; height:50vh;">
+<img src="./public/schema.png" alt="Database Schema" style="width:100vw; height:60vh;">
 
 <p>This image gives an overview of the relationships between different models in the system.</p>
 
