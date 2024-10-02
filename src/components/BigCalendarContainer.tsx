@@ -1,6 +1,7 @@
 import React from 'react'
 import BigCalendar from './BigCalendar'
 import prisma from '@/lib/prisma'
+import { adjustScheduleToCurrentWeek } from '@/lib/utils'
 
 const BigCalendarContainer = async ({ type, id }: { type: "teacherId" | "classId", id: string | number }) => {
     const dataRes = await prisma.lesson.findMany({
@@ -18,9 +19,11 @@ const BigCalendarContainer = async ({ type, id }: { type: "teacherId" | "classId
         start: lesson.startTime,
         end: lesson.endTime,
     }))
+    const schedule = adjustScheduleToCurrentWeek(data)
+
     return (
         <BigCalendar
-            data={data}
+            data={schedule}
         />
     )
 }
