@@ -2,6 +2,15 @@
 
 <p>This project is the backend for a <strong>School Management System</strong>, built using <em>Node.js</em>, <em>Prisma ORM</em>, and <em>PostgreSQL</em>. It provides CRUD (Create, Read, Update, Delete) operations for managing data related to admins, students, teachers, parents, classes, grades, subjects, lessons, exams, assignments, and attendance.</p>
 
+## Schema Overview
+
+<p>Below is a visual representation of the database schema:</p>
+
+<img src="./public/schema.svg" alt="Database Schema" style="width:100vw; height:50vh;">
+
+<p>This image gives an overview of the relationships between different models in the system.</p>
+
+
 ## Technologies Used
 
 <ul>
