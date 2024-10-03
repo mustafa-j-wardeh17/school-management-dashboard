@@ -42,7 +42,7 @@ const StudentPage = async ({ params: { id } }: { params: { id: string } }) => {
                         <div className="w-1/3">
                             <Image
                                 src={student.img || "/noAvatar.png"}
-                                alt=""
+                                alt="student image"
                                 width={144}
                                 height={144}
                                 className="w-36 h-36 rounded-full object-cover"

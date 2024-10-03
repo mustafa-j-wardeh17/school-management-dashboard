@@ -1,9 +1,8 @@
 import { auth } from "@clerk/nextjs/server"
-import { title } from "process"
 
-const { userId, sessionClaims } = auth()
-export const role = (sessionClaims?.metadata as { role?: string })?.role
-export const currentUserId = userId
+// const { userId, sessionClaims } = auth()
+// export const role = (sessionClaims?.metadata as { role?: string })?.role
+// export const currentUserId = userId
 
 
 // for big calender comp to fetch the week schedule

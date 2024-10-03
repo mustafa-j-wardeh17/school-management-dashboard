@@ -1,12 +1,11 @@
 'use client'
-import { deleteClass, deleteSubject, deleteTeacher } from '@/lib/actions';
+import { deleteClass, deleteStudent, deleteSubject, deleteTeacher } from '@/lib/actions';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { useFormState } from 'react-dom';
 import { toast } from 'react-toastify';
-import { boolean } from 'zod';
 import { FormContainerProps } from './FormContainer';
 
 
@@ -14,7 +13,7 @@ const deleteActionMap = {
     subject: deleteSubject,
     class: deleteClass,
     teacher: deleteTeacher,
-    student: deleteSubject,
+    student: deleteStudent,
     parent: deleteSubject,
     lesson: deleteSubject,
     exam: deleteSubject,

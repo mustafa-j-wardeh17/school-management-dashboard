@@ -4,12 +4,15 @@ import Table from '@/components/Table'
 import TableSearch from '@/components/TableSearch'
 import prisma from '@/lib/prisma'
 import { ITEMS_PER_PAGE } from '@/lib/settings'
-import { role } from '@/lib/utils'
 import { Class, Prisma, Subject, Teacher } from '@prisma/client'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
+import { auth } from '@clerk/nextjs/server'
 
+const { userId, sessionClaims } = auth()
+export const role = (sessionClaims?.metadata as { role?: string })?.role
+export const currentUserId = userId
 
 const columns = [
     {

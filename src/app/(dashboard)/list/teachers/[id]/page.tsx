@@ -82,7 +82,7 @@ const TeacherPage = async ({
                     width={14}
                     height={14}
                   />
-                  {/* <span>{teacher.birthday}</span> */}
+                  {new Intl.DateTimeFormat("en-US").format(teacher.birthday)}
                 </div>
                 <div className="w-full md:w-1/3 lg:w-full 2xl:w-1/3 flex items-center gap-2">
                   <Image
@@ -165,7 +165,7 @@ const TeacherPage = async ({
         <div className='mt-4 bg-white rounded-md p-4 h-[800px]'>
           {/* TEACHER SCHEDULE */}
           <h1>Teacher&apos;s Schedule</h1>
-          {/* <BigCalendarContainer type="teacherId" id={teacher.id} /> */}
+          <BigCalendarContainer type="teacherId" id={teacher.id} />
         </div>
       </div>
       {/* RIGHT */}

@@ -1,15 +1,17 @@
-import FormModal from '@/components/FormModal'
+import FormContainer from '@/components/FormContainer'
 import Pagination from '@/components/Pagination'
 import Table from '@/components/Table'
 import TableSearch from '@/components/TableSearch'
 import prisma from '@/lib/prisma'
 import { ITEMS_PER_PAGE } from '@/lib/settings'
-import { role } from '@/lib/utils'
+import { auth } from '@clerk/nextjs/server'
 import { Class, Grade, Prisma, Student } from '@prisma/client'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
-
+const { userId, sessionClaims } = auth()
+export const role = (sessionClaims?.metadata as { role?: string })?.role
+export const currentUserId = userId
 const columns = [
     {
         header: "Info",
@@ -81,7 +83,7 @@ const renderRow = (item: StudentList) => (
                 </Link>
                 {
                     role === 'admin' && (
-                        <FormModal
+                        <FormContainer
                             table='student'
                             type='delete'
                             id={item.id}
@@ -160,7 +162,7 @@ const StudentsListPage = async ({ searchParams }: {
                         </button>
                         {
                             role === 'admin' && (
-                                <FormModal
+                                <FormContainer
                                     table='student'
                                     type='create'
                                 />
