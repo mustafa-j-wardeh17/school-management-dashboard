@@ -1,7 +1,7 @@
 # School Management System 
-# Next.js Dashboard Project
 
-This project is a **Next.js** application designed to manage a dashboard with various features including authentication, scheduling, data visualization, and form management. It integrates **Clerk** for authentication, **Prisma ORM** for database operations, and utilizes a variety of libraries to support the frontend and backend functionality.
+This project is a **Next.js** application designed specifically for managing school operations through a comprehensive dashboard. It includes various features such as authentication, scheduling, data visualization, and form management, tailored for educational institutions. The application integrates **Clerk** for secure authentication, **Prisma ORM** for efficient database operations, and utilizes a variety of libraries to enhance both frontend and backend functionality, making it an all-in-one solution for school management.
+
 
 ## Frontend Overview
 
