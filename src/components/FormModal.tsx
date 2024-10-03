@@ -114,6 +114,7 @@ const FormModal = ({ table, type, data, id, relatedData }: FormContainerProps & 
                 router.refresh()
             }
         }, [state])
+        console.log(id)
         return type === 'delete' && id ? (
             <form
                 action={formAction}
