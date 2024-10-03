@@ -9,6 +9,7 @@ import { createTeacher, updateTeacher } from '@/lib/actions';
 import { useFormState } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
+import { CldUploadWidget } from 'next-cloudinary';
 
 const TeacherForm = ({ setOpen, type, data, relatedData }: {
     setOpen: Dispatch<SetStateAction<boolean>>,
@@ -165,33 +166,26 @@ const TeacherForm = ({ setOpen, type, data, relatedData }: {
                         </p>
                     }
                 </div>
-                {/* <div className='flex flex-col justify-center items-center gap-2 w-full md:w-1/4'>
-                    <label
-                        className='text-xs cursor-pointer text-gray-500 flex items-center gap-2 '
-                        htmlFor='img'
-                    >
-                        <Image
-                            src={'/upload.png'}
-                            alt='upload image'
-                            width={28}
-                            height={28}
-                        />
-                        <span>Upload a photo</span>
-                    </label>
-                    <input
-                        id='img'
-                        type="file"
-                        {...register("img")}
-                        className='hidden'
-                    />
 
-                    {
-                        errors.sex?.message &&
-                        <p className='text-red-400 text-xs'>
-                            {errors.sex?.message.toString()}
-                        </p>
-                    }
-                </div> */}
+                <CldUploadWidget uploadPreset="<Your Upload Preset>">
+                    {({ open }) => {
+                        return (
+                            <div
+                                className='text-xs cursor-pointer text-gray-500 flex items-center gap-2 '
+                                onClick={() => open()}                            >
+                                <Image
+                                    src={'/upload.png'}
+                                    alt='upload image'
+                                    width={28}
+                                    height={28}
+                                />
+                                <span>Upload a photo</span>
+                            </div>
+                        );
+                    }}
+                </CldUploadWidget>
+
+
             </div>
 
             <button className='bg-blue-400 text-white p-2 rounded-md'>{type === 'create' ? 'Create' : 'Update'}</button>

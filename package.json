@@ -14,6 +14,7 @@
     "@prisma/client": "^5.20.0",
     "moment": "^2.30.1",
     "next": "^14.2.13",
+    "next-cloudinary": "^6.13.0",
     "next-dashbaord": "file:",
     "prisma": "^5.20.0",
     "react": "^18",
