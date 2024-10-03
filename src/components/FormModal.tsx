@@ -1,5 +1,5 @@
 'use client'
-import { deleteSubject } from '@/lib/actions';
+import { deleteClass, deleteSubject, deleteTeacher } from '@/lib/actions';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -12,8 +12,8 @@ import { FormContainerProps } from './FormContainer';
 
 const deleteActionMap = {
     subject: deleteSubject,
-    class: deleteSubject,
-    teacher: deleteSubject,
+    class: deleteClass,
+    teacher: deleteTeacher,
     student: deleteSubject,
     parent: deleteSubject,
     lesson: deleteSubject,
@@ -76,18 +76,18 @@ const forms: {
         relatedData?: any
     ) => JSX.Element
 } = {
-    teacher: (setOpen, type, data,relatedData) => <TeacherForm type={type} data={data} setOpen={setOpen} relatedData={relatedData} />,
-    student: (setOpen, type, data,relatedData) => <StudentForm type={type} data={data} setOpen={setOpen} relatedData={relatedData} />,
-    parent: (setOpen, type, data,relatedData) => <ParentForm type={type} data={data} setOpen={setOpen} relatedData={relatedData} />,
-    subject: (setOpen, type, data,relatedData) => <SubjectForm type={type} data={data} setOpen={setOpen} relatedData={relatedData} />,
-    class: (setOpen, type, data,relatedData) => <ClassForm type={type} data={data} setOpen={setOpen} relatedData={relatedData} />,
-    lesson: (setOpen, type, data,relatedData) => <LessonForm type={type} data={data} setOpen={setOpen} relatedData={relatedData} />,
-    exam: (setOpen, type, data,relatedData) => <ExamForm type={type} data={data} setOpen={setOpen} relatedData={relatedData} />,
-    assignment: (setOpen, type, data,relatedData) => <AssignmentForm type={type} data={data} setOpen={setOpen} relatedData={relatedData} />,
-    result: (setOpen, type, data,relatedData) => <ResultForm type={type} data={data} setOpen={setOpen} relatedData={relatedData} />,
-    attendance: (setOpen, type, data,relatedData) => <AttendanceForm type={type} data={data} setOpen={setOpen} relatedData={relatedData} />,
-    event: (setOpen, type, data,relatedData) => <EventForm type={type} data={data} setOpen={setOpen} relatedData={relatedData} />,
-    announcement: (setOpen, type, data,relatedData) => <AnnouncementForm type={type} data={data} setOpen={setOpen} relatedData={relatedData} />,
+    teacher: (setOpen, type, data, relatedData) => <TeacherForm type={type} data={data} setOpen={setOpen} relatedData={relatedData} />,
+    student: (setOpen, type, data, relatedData) => <StudentForm type={type} data={data} setOpen={setOpen} relatedData={relatedData} />,
+    parent: (setOpen, type, data, relatedData) => <ParentForm type={type} data={data} setOpen={setOpen} relatedData={relatedData} />,
+    subject: (setOpen, type, data, relatedData) => <SubjectForm type={type} data={data} setOpen={setOpen} relatedData={relatedData} />,
+    class: (setOpen, type, data, relatedData) => <ClassForm type={type} data={data} setOpen={setOpen} relatedData={relatedData} />,
+    lesson: (setOpen, type, data, relatedData) => <LessonForm type={type} data={data} setOpen={setOpen} relatedData={relatedData} />,
+    exam: (setOpen, type, data, relatedData) => <ExamForm type={type} data={data} setOpen={setOpen} relatedData={relatedData} />,
+    assignment: (setOpen, type, data, relatedData) => <AssignmentForm type={type} data={data} setOpen={setOpen} relatedData={relatedData} />,
+    result: (setOpen, type, data, relatedData) => <ResultForm type={type} data={data} setOpen={setOpen} relatedData={relatedData} />,
+    attendance: (setOpen, type, data, relatedData) => <AttendanceForm type={type} data={data} setOpen={setOpen} relatedData={relatedData} />,
+    event: (setOpen, type, data, relatedData) => <EventForm type={type} data={data} setOpen={setOpen} relatedData={relatedData} />,
+    announcement: (setOpen, type, data, relatedData) => <AnnouncementForm type={type} data={data} setOpen={setOpen} relatedData={relatedData} />,
 }
 
 
@@ -127,7 +127,7 @@ const FormModal = ({ table, type, data, id, relatedData }: FormContainerProps & 
         ) :
             type === "create" || type === "update" ? (
                 // for each table there are different form so creating a object with table name will solve the repeating of if else here
-                forms[table](setOpen, type, data,relatedData)
+                forms[table](setOpen, type, data, relatedData)
             ) : (
                 'Form not found!'
             )

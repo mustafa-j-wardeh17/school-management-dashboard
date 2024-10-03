@@ -3,7 +3,7 @@ import React, { Dispatch, SetStateAction, useEffect } from 'react'
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import InputField from '../InputField';
-import { subjectSchema } from '@/lib/formValidationSchema';
+import { SubjectSchema, subjectSchema } from '@/lib/formValidationSchema';
 import { createSubject, updateSubject } from '@/lib/actions';
 import { useFormState } from 'react-dom';
 import { toast } from 'react-toastify';
@@ -20,7 +20,7 @@ const SubjectForm = ({ setOpen, type, data, relatedData }: {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<subjectSchema>({
+    } = useForm<SubjectSchema>({
         resolver: zodResolver(subjectSchema),
     });
 

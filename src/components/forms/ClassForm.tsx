@@ -48,7 +48,6 @@ const ClassForm = ({
             router.refresh();
         }
     }, [state, router, type, setOpen]);
-
     const { teachers, grades } = relatedData;
     return (
         <form className="flex flex-col gap-8" onSubmit={onSubmit}>
@@ -86,7 +85,7 @@ const ClassForm = ({
                     <select
                         className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
                         {...register("supervisorId")}
-                        defaultValue={data?.teachers}
+                        defaultValue={data?.supervisorId}
                     >
                         {teachers.map(
                             (teacher: { id: string; name: string; surname: string }) => (
