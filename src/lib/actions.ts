@@ -151,10 +151,27 @@ export const createTeacher = async (
             firstName: data.name,
             lastName: data.surname
         })
-        // create user to clerk
-        // await prisma.teacher.create({
-        //     data,
-        // });
+        //create user to clerk
+        await prisma.teacher.create({
+            data: {
+                id: user.id,
+                username: data.username,
+                name: data.name,
+                surname: data.surname,
+                email: data.email || null,
+                phone: data.phone || null,
+                address: data.address,
+                img: data.img || null,
+                bloodType: data.bloodType,
+                sex: data.sex,
+                birthday: data.birthday,
+                subjects: {
+                    connect: data.subjects?.map((subjectId: string) => ({
+                        id: parseInt(subjectId),
+                    })),
+                },
+            },
+        });
 
         // revalidatePath("/list/teachers");
         return { success: true, error: false };

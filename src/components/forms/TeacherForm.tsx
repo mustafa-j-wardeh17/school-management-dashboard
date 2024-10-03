@@ -38,17 +38,17 @@ const TeacherForm = ({ setOpen, type, data, relatedData }: {
     )
 
     const onSubmit = handleSubmit((data) => {
-        formAction(data)
+        formAction({ ...data, img: img?.secureUrl })
     })
 
     const router = useRouter()
     useEffect(() => {
         if (state.success) {
-            toast(`Subject has been ${type === 'create' ? 'created' : 'updated'}!`)
-            setOpen(false)
-            router.refresh()
+            toast(`Teacher has been ${type === "create" ? "created" : "updated"}!`);
+            setOpen(false);
+            router.refresh();
         }
-    }, [state])
+    }, [state, router, type, setOpen]);
 
     const { subjects } = relatedData;
     return (
@@ -137,8 +137,8 @@ const TeacherForm = ({ setOpen, type, data, relatedData }: {
                         {...register('sex')}
                         className='ring-[1.5px] ring-gray-100 p-2 rounded-md text-sm w-full'
                     >
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
+                        <option value="MALE">Male</option>
+                        <option value="FEMALE">Female</option>
                     </select>
                     {
                         errors.sex?.message &&
@@ -147,26 +147,25 @@ const TeacherForm = ({ setOpen, type, data, relatedData }: {
                         </p>
                     }
                 </div>
-                <div className='flex flex-col gap-2 w-full md:w-1/4'>
-                    <label className='text-xs text-gray-500'>Subject</label>
+                <div className="flex flex-col gap-2 w-full md:w-1/4">
+                    <label className="text-xs text-gray-500">Subjects</label>
                     <select
-                        defaultValue={data?.subjectId}
-                        {...register('subjects')}
-                        className='ring-[1.5px] ring-gray-100 p-2 rounded-md text-sm w-full'
+                        multiple
+                        className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
+                        {...register("subjects")}
+                        defaultValue={data?.subjects}
                     >
-                        {
-                            subjects.map((subject: { id: number, name: string }) => (
-                                <option value={subject.id}>{subject.name}</option>
-                            ))
-                        }
-
+                        {subjects.map((subject: { id: number; name: string }) => (
+                            <option value={subject.id} key={subject.id}>
+                                {subject.name}
+                            </option>
+                        ))}
                     </select>
-                    {
-                        errors.subjects?.message &&
-                        <p className='text-red-400 text-xs'>
-                            {errors.subjects?.message.toString()}
+                    {errors.subjects?.message && (
+                        <p className="text-xs text-red-400">
+                            {errors.subjects.message.toString()}
                         </p>
-                    }
+                    )}
                 </div>
 
                 <CldUploadWidget
@@ -195,7 +194,13 @@ const TeacherForm = ({ setOpen, type, data, relatedData }: {
 
 
             </div>
-
+            {
+                state.error && (
+                    <span className='text-red-500 text-xs'>
+                        Something went wrong!
+                    </span>
+                )
+            }
             <button className='bg-blue-400 text-white p-2 rounded-md'>{type === 'create' ? 'Create' : 'Update'}</button>
         </form>
     )
