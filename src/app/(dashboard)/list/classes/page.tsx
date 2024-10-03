@@ -1,4 +1,4 @@
-import FormModal from '@/components/FormModal'
+import FormContainer from '@/components/FormContainer'
 import Pagination from '@/components/Pagination'
 import Table from '@/components/Table'
 import TableSearch from '@/components/TableSearch'
@@ -57,12 +57,12 @@ const renderRow = (item: ClassList) => (
                 {
                     role === 'admin' && (
                         <>
-                            <FormModal
+                            <FormContainer
                                 table='class'
                                 type='update'
                                 data={item}
                             />
-                            <FormModal
+                            <FormContainer
                                 table='class'
                                 type='delete'
                                 id={item.id}
@@ -139,7 +139,7 @@ const ClassesListPage = async ({ searchParams }: {
                         </button>
                         {
                             role === 'admin' && (
-                                <FormModal
+                                <FormContainer
                                     table='class'
                                     type='create'
                                 />
