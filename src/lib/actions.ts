@@ -1,5 +1,6 @@
 "use server"
 
+import { clerkClient } from "@clerk/nextjs/server";
 import { ClassSchema, SubjectSchema, subjectSchema, TeacherSchema } from "./formValidationSchema"
 import prisma from "./prisma"
 type CurrentState = { success: boolean; error: boolean };
@@ -144,10 +145,16 @@ export const createTeacher = async (
 ) => {
     try {
 
+        const user = await clerkClient.users.createUser({
+            username: data.username,
+            password: data.password,
+            firstName: data.name,
+            lastName: data.surname
+        })
         // create user to clerk
-        await prisma.teacher.create({
-            data,
-        });
+        // await prisma.teacher.create({
+        //     data,
+        // });
 
         // revalidatePath("/list/teachers");
         return { success: true, error: false };
