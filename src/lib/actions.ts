@@ -143,6 +143,8 @@ export const createTeacher = async (
     data: TeacherSchema
 ) => {
     try {
+
+        // create user to clerk
         await prisma.teacher.create({
             data,
         });

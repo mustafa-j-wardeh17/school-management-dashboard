@@ -1,5 +1,5 @@
 'use client'
-import React, { Dispatch, SetStateAction, useEffect } from 'react'
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import InputField from '../InputField';
@@ -25,6 +25,8 @@ const TeacherForm = ({ setOpen, type, data, relatedData }: {
     } = useForm<TeacherSchema>({
         resolver: zodResolver(teacherSchema),
     });
+
+    const [img, setImg] = useState<any>()
 
     // use formstate 
     const [state, formAction] = useFormState(type === 'create'
@@ -167,7 +169,13 @@ const TeacherForm = ({ setOpen, type, data, relatedData }: {
                     }
                 </div>
 
-                <CldUploadWidget uploadPreset="<Your Upload Preset>">
+                <CldUploadWidget
+                    uploadPreset="school"
+                    onSuccess={(res, { widget }) => {
+                        setImg(res.info);
+                        widget.close()
+                    }}
+                >
                     {({ open }) => {
                         return (
                             <div
