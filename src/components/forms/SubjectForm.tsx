@@ -1,16 +1,23 @@
 'use client'
-import React from 'react'
+import React, { Dispatch, SetStateAction, useEffect } from 'react'
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import InputField from '../InputField';
 import Image from 'next/image';
 import { subjectSchema } from '@/lib/formValidationSchema';
-import { createSubject } from '@/lib/actions';
+import { createSubject, deleteSubject, updateSubject } from '@/lib/actions';
 import { useFormState } from 'react-dom';
+import { toast } from 'react-toastify';
+import { useRouter } from 'next/navigation';
 
 
-const SubjectForm = ({ type, data }: { type: 'create' | 'update'; data?: any }) => {
+const SubjectForm = ({ setOpen, type, data }: {
+    setOpen: Dispatch<SetStateAction<boolean>>,
+
+    type: 'create' | 'update';
+    data?: any
+}) => {
     const {
         register,
         handleSubmit,
@@ -20,13 +27,25 @@ const SubjectForm = ({ type, data }: { type: 'create' | 'update'; data?: any }) 
     });
 
     // use formstate 
-    const [state, formAction] = useFormState(createSubject, {
-        success: false, error: false
-    })
+    const [state, formAction] = useFormState(type === 'create'
+        ? createSubject
+        : updateSubject
+        , {
+            success: false, error: false
+        })
 
     const onSubmit = handleSubmit((data) => {
         formAction(data)
     })
+
+    const router = useRouter()
+    useEffect(() => {
+        if (state.success) {
+            toast(`Subject has been ${type === 'create' ? 'created' : 'updated'}!`)
+            setOpen(false)
+            router.refresh()
+        }
+    }, [state])
     return (
         <form
             onSubmit={onSubmit}
@@ -45,7 +64,7 @@ const SubjectForm = ({ type, data }: { type: 'create' | 'update'; data?: any }) 
 
             </div>
 
-            {state.error &&<span className='text-red-500 text-xs'>Something went wrong!</span>}
+            {state.error && <span className='text-red-500 text-xs'>Something went wrong!</span>}
             <button className='bg-blue-400 text-white p-2 rounded-md'>{type === 'create' ? 'Create' : 'Update'}</button>
         </form>
     )
