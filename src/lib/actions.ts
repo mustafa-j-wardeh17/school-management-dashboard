@@ -185,16 +185,43 @@ export const updateTeacher = async (
     currentState: CurrentState,
     data: TeacherSchema
 ) => {
+    if (!data.id) return {
+        success: false,
+        error: true
+    }
     try {
+        const user = await clerkClient.users.updateUser(data.id, {
+            username: data.username,
+            ...(data.password !== "" && { password: data.password }),
+            firstName: data.name,
+            lastName: data.surname
+        })
+        //create user to clerk
         await prisma.teacher.update({
             where: {
-                id: data.id,
+                id: data.id
             },
-            data,
+            data: {
+                ...(data.password !== "" && { password: data.password }),
+                username: data.username,
+                name: data.name,
+                surname: data.surname,
+                email: data.email || null,
+                phone: data.phone || null,
+                address: data.address,
+                img: data.img || null,
+                bloodType: data.bloodType,
+                sex: data.sex,
+                birthday: data.birthday,
+                subjects: {
+                    set: data.subjects?.map((subjectId: string) => ({
+                        id: parseInt(subjectId),
+                    })),
+                },
+            },
         });
-
-        // revalidatePath("/list/teachers");
         return { success: true, error: false };
+
     } catch (err) {
         console.log(err);
         return { success: false, error: true };
