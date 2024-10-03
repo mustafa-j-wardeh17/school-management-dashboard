@@ -91,9 +91,15 @@ The backend uses **Prisma ORM** to manage the database schema. This includes mod
 
   <pre><code>npm install</code></pre>
 
-  <li>Create a `.env` file and set your PostgreSQL connection URL:</li>
-
-  <pre><code>DATABASE_URL="postgresql://user:password@localhost:5432/dbname"</code></pre>
+<li>Before running the application, ensure you create a `.env` file in the root of your project with the following variables:</li>
+<pre><code>
+DATABASE_URL="postgresql://user:password@localhost:5432/dbname"
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="your_clerk_publishable_key"
+CLERK_SECRET_KEY="your_clerk_secret_key"
+NEXT_PUBLIC_CLERK_SIGN_IN_URL="/"
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME="your_cloudinary_cloud_name"
+NEXT_PUBLIC_CLOUDINARY_API_KEY="your_cloudinary_api_key"
+</code></pre>
 
   <li>Run Prisma migrations to set up the database:</li>
 
