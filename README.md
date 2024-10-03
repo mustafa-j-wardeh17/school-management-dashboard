@@ -16,7 +16,7 @@
 <ul>
   <li><strong>Prisma ORM</strong>: Object-Relational Mapping tool to interact with the PostgreSQL database</li>
   <li><strong>PostgreSQL</strong>: Database used for storing the application data</li>
-  <li><strong>Node.js</strong>: Runtime environment for building the backend server</li>
+  <li><strong>Next.js</strong>: Runtime environment for building the backend server</li>
 </ul>
 
 ## Project Structure
@@ -114,6 +114,40 @@ model Student {
   results     Result[]
   birthday    DateTime
 }
+
+model Teacher {
+  id        String    @id
+  username  String    @unique
+  name      String
+  surname   String
+  email     String?   @unique
+  phone     String?   @unique
+  address   String
+  img       String?
+  bloodType String
+  sex       UserSex
+  createdAt DateTime  @default(now())
+  subjects  Subject[]
+  lessons   Lesson[]
+  classes   Class[]
+  birthday  DateTime
+}
+
+model Parent {
+  id        String    @id
+  username  String    @unique
+  name      String
+  surname   String
+  email     String?   @unique
+  phone     String    @unique
+  address   String
+  createdAt DateTime  @default(now())
+  students  Student[]
+}
+
+.
+.
+.
 </code>
 </pre>
 
