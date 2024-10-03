@@ -1,15 +1,47 @@
-# School Management System Backend
+# School Management System 
+# Next.js Dashboard Project
 
-<p>This project is the backend for a <strong>School Management System</strong>, built using <em>Node.js</em>, <em>Prisma ORM</em>, and <em>PostgreSQL</em>. It provides CRUD (Create, Read, Update, Delete) operations for managing data related to admins, students, teachers, parents, classes, grades, subjects, lessons, exams, assignments, and attendance.</p>
+This project is a **Next.js** application designed to manage a dashboard with various features including authentication, scheduling, data visualization, and form management. It integrates **Clerk** for authentication, **Prisma ORM** for database operations, and utilizes a variety of libraries to support the frontend and backend functionality.
 
-## Schema Overview
+## Frontend Overview
+
+### Technologies Used
+
+- **Next.js**: A React framework for building server-side rendered web applications.
+- **React**: JavaScript library for building user interfaces.
+- **Tailwind CSS**: Utility-first CSS framework for styling.
+- **React Hook Form**: A library to manage forms in React.
+- **React Big Calendar & React Calendar**: Libraries for rendering interactive calendars and scheduling.
+- **React Toastify**: Provides notifications to improve the user experience.
+- **Recharts**: A charting library for creating data visualizations.
+- **Moment.js**: A library for manipulating and formatting dates.
+- **Next Cloudinary**: Cloudinary integration for image uploading and manipulation.
+  
+### Key Features
+
+1. **Authentication**: Handled by **Clerk**, providing sign-in, sign-up, and session management.
+2. **Scheduling & Calendars**: Integrated with **React Big Calendar** and **React Calendar** to manage events, tasks, and meetings.
+3. **Forms**: Managed using **React Hook Form** with **Zod** for schema validation, ensuring robust form handling.
+4. **Notifications**: Implemented via **React Toastify** for user-friendly alerts and updates.
+5. **Charts**: Data visualizations using **Recharts**, allowing for customizable charts and reports.
+
+## Backend Overview
+
+### Technologies Used
+
+- **Prisma ORM**: Object-Relational Mapping (ORM) to interact with the PostgreSQL database.
+- **PostgreSQL**: A powerful, open-source relational database.
+- **Next.js API Routes**: Backend logic is implemented using server actions provided by Next.js.
+
+### Database Schema
+
+The backend uses **Prisma ORM** to manage the database schema. This includes models for **users**, **events**, and other key entities in the dashboard.
 
 <p>Below is a visual representation of the database schema:</p>
 
 <img src="./public/schema.png" alt="Database Schema" style="width:100vw; height:60vh;">
 
 <p>This image gives an overview of the relationships between different models in the system.</p>
-
 
 ## Technologies Used
 
@@ -153,18 +185,15 @@ model Parent {
 
 <p>For more details, view the full <code>schema.prisma</code> file in the project repository.</p>
 
-## API Endpoints
+## API Operations
 
-<p>The project exposes the following API routes for CRUD operations:</p>
+<p>The project utilizes server actions for the following operations:</p>
 
 <ul>
-  <li><code>GET /students</code>: Retrieve a list of all students</li>
-  <li><code>POST /students</code>: Create a new student</li>
-  <li><code>GET /students/:id</code>: Retrieve a specific student by ID</li>
-  <li><code>PUT /students/:id</code>: Update a student's details</li>
-  <li><code>DELETE /students/:id</code>: Delete a student by ID</li>
-  <li><code>GET /teachers</code>: Retrieve a list of all teachers</li>
-  <li>...and more.</li>
+  <li><strong>Create:</strong> Create a new student, teacher, or class.</li>
+  <li><strong>Read:</strong> Fetch student, teacher, and class data directly from the database using Prisma.</li>
+  <li><strong>Update:</strong> Update details for students, teachers, and classes.</li>
+  <li><strong>Delete:</strong> Remove students, teachers, or classes from the database.</li>
 </ul>
 
 ## Contributing
@@ -181,5 +210,3 @@ model Parent {
 ## License
 
 <p>This project is licensed under the <strong>MIT License</strong>.</p>
-</body>
-</html>
