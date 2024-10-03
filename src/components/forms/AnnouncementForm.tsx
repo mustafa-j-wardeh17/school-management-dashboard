@@ -62,7 +62,7 @@ const AnnouncementForm = ({ type, data }: { type: 'create' | 'update'; data?: an
             className='flex flex-col gap-8'
         >
             <h1 className='text-xl font-semibold'>Create a new teacher</h1>
-            <span className='text-xs text-gray-400 font-medium'> Authentication Information</span>
+            <span className='text-xs text-gray-400 font-medium'>Authentication Information</span>
             <div className='flex flex-wrap gap-4 justify-between'>
 
                 <InputField
