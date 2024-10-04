@@ -24,20 +24,25 @@ const Pagination = ({ page, count }: paginationProps) => {
       >
         Prev
       </button>
-      <div className='flex items-center text-sm gap-2'>
-        {
-          Array.from({ length: Math.ceil(count / ITEMS_PER_PAGE) }, (_, index) => {
+      <div className="flex items-center gap-2 text-sm">
+        {Array.from(
+          { length: Math.ceil(count / ITEMS_PER_PAGE) },
+          (_, index) => {
             const pageIndex = index + 1;
             return (
               <button
-                className={`px-2 rounded-sm ${pageIndex === page && 'bg-mSky'}`}
-                onClick={() => changePage(pageIndex)}
+                key={pageIndex}
+                className={`px-2 rounded-sm ${page === pageIndex ? "bg-lamaSky" : ""
+                  }`}
+                onClick={() => {
+                  changePage(pageIndex);
+                }}
               >
                 {pageIndex}
               </button>
-            )
-          })
-        }
+            );
+          }
+        )}
       </div>
       <button
         className='py-2 px-4 rounded-md font-semibold text-xs disabled:cursor-not-allowed disabled:opacity-50'
