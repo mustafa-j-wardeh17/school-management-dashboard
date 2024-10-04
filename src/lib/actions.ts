@@ -1,7 +1,7 @@
 "use server"
 
 import { clerkClient } from "@clerk/nextjs/server";
-import { ClassSchema, StudentSchema, SubjectSchema, TeacherSchema } from "./formValidationSchema"
+import { ClassSchema, ExamSchema, StudentSchema, SubjectSchema, TeacherSchema } from "./formValidationSchema"
 import prisma from "./prisma"
 type CurrentState = { success: boolean; error: boolean };
 
@@ -366,3 +366,74 @@ export const deleteStudent = async (
         return { success: false, error: true };
     }
 };
+
+export const createExam = async (
+    currentState: CurrentState,
+    data: ExamSchema
+) => {
+    try {
+
+        await prisma.exam.create({
+            data: {
+                title: data.title,
+                startTime: data.startTime,
+                endTime: data.endTime,
+                lessonId: data.lessonId,
+            },
+        });
+
+        // revalidatePath("/list/subjects");
+        return { success: true, error: false };
+    } catch (err) {
+        console.log(err);
+        return { success: false, error: true };
+    }
+};
+
+export const updateExam = async (
+    currentState: CurrentState,
+    data: ExamSchema
+) => {
+
+    try {
+
+        await prisma.exam.update({
+            where: {
+                id: data.id,
+            },
+            data: {
+                title: data.title,
+                startTime: data.startTime,
+                endTime: data.endTime,
+                lessonId: data.lessonId,
+            },
+        });
+
+        // revalidatePath("/list/subjects");
+        return { success: true, error: false };
+    } catch (err) {
+        console.log(err);
+        return { success: false, error: true };
+    }
+};
+
+export const deleteExam = async (
+    currentState: CurrentState,
+    data: FormData
+) => {
+    const id = data.get("id") as string;
+
+    try {
+        await prisma.exam.delete({
+            where: {
+                id: parseInt(id),
+                // ...(role === "teacher" ? { lesson: { teacherId: userId! } } : {}),
+            },
+        });
+
+        return { success: true, error: false };
+    } catch (err) {
+        console.log(err);
+        return { success: false, error: true };
+    }
+}

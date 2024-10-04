@@ -4,80 +4,87 @@ import Table from '@/components/Table'
 import TableSearch from '@/components/TableSearch'
 import prisma from '@/lib/prisma'
 import { ITEMS_PER_PAGE } from '@/lib/settings'
-import { role } from '@/lib/utils'
+import { auth } from '@clerk/nextjs/server'
 import { Class, Grade, Prisma, Teacher } from '@prisma/client'
 import Image from 'next/image'
 import React from 'react'
 
-const columns = [
-    {
-        header: "Class Name",
-        accessor: "className"
-    },
-    {
-        header: "Capacity",
-        accessor: "capacity",
-        className: "hidden sm:table-cell",
-    },
-    {
-        header: "Grade",
-        accessor: "grade",
-        className: "table-cell",
-    },
-    {
-        header: "Supervisor",
-        accessor: "supervisor",
-        className: "hidden md:table-cell",
-    },
-    ...(role === "admin"
-        ? [{
-            header: "Actions",
-            accessor: "actions",
-        }]
-        : []
-    )
-]
-type ClassList = Class & { supervisor: Teacher } & { grade: Grade }
-const renderRow = (item: ClassList) => (
-    <tr
-        key={item.id}
-        className='border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-mPurpleLight'
-    >
-        <td className='flex items-center gap-4 p-4'>
 
-            <div className='flex flex-col'>
-                <h3 className='font-semibold'>{item.name}</h3>
-            </div>
-        </td>
-        <td className="hidden sm:table-cell text-xs">{item.capacity}</td>
-        <td className="table-cell text-xs">{item.grade.level}</td>
-        <td className="hidden md:table-cell text-xs">{item.supervisor.name + " " + item.supervisor.surname}</td>
-        <td>
-            <div className='flex items-center gap-2'>
-                {
-                    role === 'admin' && (
-                        <>
-                            <FormContainer
-                                table='class'
-                                type='update'
-                                data={item}
-                            />
-                            <FormContainer
-                                table='class'
-                                type='delete'
-                                id={item.id}
-                            />
-                        </>
-
-                    )
-                }
-            </div>
-        </td>
-    </tr>
-)
 const ClassesListPage = async ({ searchParams }: {
     searchParams: { [key: string]: string | undefined }
 }) => {
+    const { sessionClaims } = auth();
+    const role = (sessionClaims?.metadata as { role?: string })?.role;
+    
+    
+    const columns = [
+        {
+            header: "Class Name",
+            accessor: "className"
+        },
+        {
+            header: "Capacity",
+            accessor: "capacity",
+            className: "hidden sm:table-cell",
+        },
+        {
+            header: "Grade",
+            accessor: "grade",
+            className: "table-cell",
+        },
+        {
+            header: "Supervisor",
+            accessor: "supervisor",
+            className: "hidden md:table-cell",
+        },
+        ...(role === "admin"
+            ? [{
+                header: "Actions",
+                accessor: "actions",
+            }]
+            : []
+        )
+    ]
+    type ClassList = Class & { supervisor: Teacher } & { grade: Grade }
+    const renderRow = (item: ClassList) => (
+        <tr
+            key={item.id}
+            className='border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-mPurpleLight'
+        >
+            <td className='flex items-center gap-4 p-4'>
+    
+                <div className='flex flex-col'>
+                    <h3 className='font-semibold'>{item.name}</h3>
+                </div>
+            </td>
+            <td className="hidden sm:table-cell text-xs">{item.capacity}</td>
+            <td className="table-cell text-xs">{item.grade.level}</td>
+            <td className="hidden md:table-cell text-xs">{item.supervisor.name + " " + item.supervisor.surname}</td>
+            <td>
+                <div className='flex items-center gap-2'>
+                    {
+                        role === 'admin' && (
+                            <>
+                                <FormContainer
+                                    table='class'
+                                    type='update'
+                                    data={item}
+                                />
+                                <FormContainer
+                                    table='class'
+                                    type='delete'
+                                    id={item.id}
+                                />
+                            </>
+    
+                        )
+                    }
+                </div>
+            </td>
+        </tr>
+    )
+
+    
     const { page, ...queryParams } = searchParams
     const p = page ? parseInt(page) : 1
 

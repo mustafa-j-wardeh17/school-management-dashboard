@@ -4,85 +4,92 @@ import Table from '@/components/Table'
 import TableSearch from '@/components/TableSearch'
 import prisma from '@/lib/prisma'
 import { ITEMS_PER_PAGE } from '@/lib/settings'
-import { currentUserId, role } from '@/lib/utils'
+import { auth } from '@clerk/nextjs/server'
 import { Class, Exam, Prisma, Subject, Teacher } from '@prisma/client'
 import Image from 'next/image'
 import React from 'react'
-
-const columns = [
-    {
-        header: "Subject Name",
-        accessor: "subjectName"
-    },
-    {
-        header: "Class",
-        accessor: "class",
-        className: "sm:table-cell hidden",
-    },
-    {
-        header: "Teacher",
-        accessor: "teacher",
-        className: "sm:table-cell hidden",
-    },
-    {
-        header: "Date",
-        accessor: "date",
-        className: "sm:table-cell hidden",
-    },
-    ...((role === "admin" || role === 'teacher')
-        ? [{
-            header: "Actions",
-            accessor: "actions",
-        }]
-        : []
-    )
-]
-type ExamList = Exam & {
-    lesson: {
-        subject: Subject;
-        class: Class;
-        teacher: Teacher;
-    };
-};
-const renderRow = (item: ExamList) => (
-    <tr
-        key={item.id}
-        className='border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-mPurpleLight'
-    >
-        <td className="flex items-center gap-4 p-4">{item.lesson.subject.name}</td>
-        <td className="hidden sm:table-cell text-xs">{item.lesson.class.name}</td>
-        <td className="hidden sm:table-cell text-xs">{item.lesson.teacher.name + " " + item.lesson.teacher.surname}</td>
-        <td className="hidden md:table-cell">
-            {new Intl.DateTimeFormat("en-US").format(item.startTime)}
-        </td>
-        <td>
-            <div className='flex items-center gap-2'>
-                {
-                    (role === 'admin' || role === 'teacher') && (
-                        <>
-                            <FormModal
-                                table='exam'
-                                type='update'
-                                data={item}
-                            />
-                            <FormModal
-                                table='exam'
-                                type='delete'
-                                id={item.id}
-                            />
-                        </>
-
-                    )
-                }
-            </div>
-        </td>
-    </tr>
-)
 
 const ExamsListPage = async ({ searchParams }: {
     searchParams: { [key: string]: string | undefined }
 }
 ) => {
+    const { sessionClaims, userId } = auth();
+    const role = (sessionClaims?.metadata as { role?: string })?.role;
+    const currentUserId = userId;
+
+
+    const columns = [
+        {
+            header: "Subject Name",
+            accessor: "subjectName"
+        },
+        {
+            header: "Class",
+            accessor: "class",
+            className: "sm:table-cell hidden",
+        },
+        {
+            header: "Teacher",
+            accessor: "teacher",
+            className: "sm:table-cell hidden",
+        },
+        {
+            header: "Date",
+            accessor: "date",
+            className: "sm:table-cell hidden",
+        },
+        ...((role === "admin" || role === 'teacher')
+            ? [{
+                header: "Actions",
+                accessor: "actions",
+            }]
+            : []
+        )
+    ]
+    type ExamList = Exam & {
+        lesson: {
+            subject: Subject;
+            class: Class;
+            teacher: Teacher;
+        };
+    };
+    const renderRow = (item: ExamList) => (
+        <tr
+            key={item.id}
+            className='border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-mPurpleLight'
+        >
+            <td className="flex items-center gap-4 p-4">{item.lesson.subject.name}</td>
+            <td className="hidden sm:table-cell text-xs">{item.lesson.class.name}</td>
+            <td className="hidden sm:table-cell text-xs">{item.lesson.teacher.name + " " + item.lesson.teacher.surname}</td>
+            <td className="hidden md:table-cell">
+                {new Intl.DateTimeFormat("en-US").format(item.startTime)}
+            </td>
+            <td>
+                <div className='flex items-center gap-2'>
+                    {
+                        (role === 'admin' || role === 'teacher') && (
+                            <>
+                                <FormModal
+                                    table='exam'
+                                    type='update'
+                                    data={item}
+                                />
+                                <FormModal
+                                    table='exam'
+                                    type='delete'
+                                    id={item.id}
+                                />
+                            </>
+
+                        )
+                    }
+                </div>
+            </td>
+        </tr>
+    )
+
+
+
     const { page, ...queryParams } = searchParams
     const p = page ? parseInt(page) : 1
     const filter: Prisma.ExamWhereInput = {};

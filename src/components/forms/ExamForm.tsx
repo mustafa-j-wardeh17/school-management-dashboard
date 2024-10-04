@@ -1,189 +1,134 @@
-'use client'
-import React from 'react'
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import InputField from '../InputField';
-import Image from 'next/image';
+"use client";
 
-const schema = z.object({
-    username: z
-        .string()
-        .min(3, { message: 'Username must be at least 3 characters long!' })
-        .max(20, { message: 'Username must be at most 20 characters long!' }),
-    email: z
-        .string()
-        .email({ message: "Invalid email address!" }),
-    password: z
-        .string()
-        .min(8, { message: 'Password must be at least 8 characters long!' }),
-    firstName: z
-        .string()
-        .min(1, { message: 'First name is required!' }),
-    lastName: z
-        .string()
-        .min(1, { message: 'Last name is required!' }),
-    phone: z
-        .string()
-        .min(1, { message: 'Phoene is required!' }),
-    address: z
-        .string()
-        .min(8, { message: 'Address is required!' }),
-    bloodType: z
-        .string()
-        .min(8, { message: 'Blood Type is required!' }),
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import InputField from "../InputField";
 
-    birthday: z
-        .date({ message: 'Birthday is required!' }),
-    sex: z
-        .enum(['male', 'female'], { message: 'Sex is required!' }),
-    image: z
-        .instanceof(File, { message: 'Image is required!' }),
+import {
+  createExam,
+  updateExam,
+} from "@/lib/actions";
 
-});
+import { useFormState } from "react-dom";
+import { Dispatch, SetStateAction, useEffect } from "react";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import { examSchema, ExamSchema } from "@/lib/formValidationSchema";
 
-type Inputs = z.infer<typeof schema>;
+const ExamForm = ({
+  type,
+  data,
+  setOpen,
+  relatedData,
+}: {
+  type: "create" | "update";
+  data?: any;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+  relatedData?: any;
+}) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ExamSchema>({
+    resolver: zodResolver(examSchema),
+  });
 
-const ExamForm = ({ type, data }: { type: 'create' | 'update'; data?: any }) => {
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm<Inputs>({
-        resolver: zodResolver(schema),
-    });
+  // AFTER REACT 19 IT'LL BE USEACTIONSTATE
 
-    const onSubmit = handleSubmit((data) => {
-        console.log(data)
-    })
-    return (
-        <form
-            onSubmit={onSubmit}
-            className='flex flex-col gap-8'
-        >
-            <h1 className='text-xl font-semibold'>Create a new teacher</h1>
-            <span className='text-xs text-gray-400 font-medium'> Authentication Information</span>
-            <div className='flex flex-wrap gap-4 justify-between'>
+  const [state, formAction] = useFormState(
+    type === "create" ? createExam : updateExam,
+    {
+      success: false,
+      error: false,
+    }
+  );
 
-                <InputField
-                    label='username'
-                    name='username'
-                    defaultValue={data?.username}
-                    register={register}
-                    error={errors.username}
-                />
-                <InputField
-                    label='Email'
-                    name='email'
-                    type='email'
-                    defaultValue={data?.email}
-                    register={register}
-                    error={errors.email}
-                />
-                <InputField
-                    label='Password'
-                    name='password'
-                    type='password'
-                    defaultValue={data?.password}
-                    register={register}
-                    error={errors.password}
-                />
-            </div>
+  const onSubmit = handleSubmit((data) => {
+    console.log(data);
+    formAction(data);
+  });
 
-            <span className='text-xs text-gray-400 font-medium'> Personal Information</span>
-            <div className='flex flex-wrap gap-4 justify-between'>
-                <InputField
-                    label='First Name'
-                    name='firstName'
-                    defaultValue={data?.firstName}
-                    register={register}
-                    error={errors.firstName}
-                />
-                <InputField
-                    label='Last Name'
-                    name='lastName'
-                    defaultValue={data?.lastName}
-                    register={register}
-                    error={errors.lastName}
-                />
-                <InputField
-                    label='Phone'
-                    name='phone'
-                    defaultValue={data?.phone}
-                    register={register}
-                    error={errors.phone}
-                />
-                <InputField
-                    label='Address'
-                    name='address'
-                    defaultValue={data?.address}
-                    register={register}
-                    error={errors.address}
-                />
-                <InputField
-                    label='Blood Type'
-                    name='bloodType'
-                    defaultValue={data?.bloodType}
-                    register={register}
-                    error={errors.bloodType}
-                />
-                <InputField
-                    label='Blood Type'
-                    name='bloodType'
-                    defaultValue={data?.bloodType}
-                    register={register}
-                    error={errors.bloodType}
-                    type='date'
-                />
-                <div className='flex flex-col gap-2 w-full md:w-1/4'>
-                    <label className='text-xs text-gray-500'>Sex</label>
-                    <select
-                        defaultValue={data?.sex}
-                        {...register('sex')}
-                        className='ring-[1.5px] ring-gray-100 p-2 rounded-md text-sm w-full'
-                    >
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                    </select>
-                    {
-                        errors.sex?.message &&
-                        <p className='text-red-400 text-xs'>
-                            {errors.sex?.message.toString()}
-                        </p>
-                    }
-                </div>
-                <div className='flex flex-col justify-center items-center gap-2 w-full md:w-1/4'>
-                    <label
-                        className='text-xs cursor-pointer text-gray-500 flex items-center gap-2 '
-                        htmlFor='img'
-                    >
-                        <Image
-                            src={'/upload.png'}
-                            alt='upload image'
-                            width={28}
-                            height={28}
-                        />
-                        <span>Upload a photo</span>
-                    </label>
-                    <input
-                        id='img'
-                        type="file"
-                        {...register("image")}
-                        className='hidden'
-                    />
+  const router = useRouter();
 
-                    {
-                        errors.sex?.message &&
-                        <p className='text-red-400 text-xs'>
-                            {errors.sex?.message.toString()}
-                        </p>
-                    }
-                </div>
-            </div>
+  useEffect(() => {
+    if (state.success) {
+      toast(`Exam has been ${type === "create" ? "created" : "updated"}!`);
+      setOpen(false);
+      router.refresh();
+    }
+  }, [state, router, type, setOpen]);
 
-            <button className='bg-blue-400 text-white p-2 rounded-md'>{type === 'create' ? 'Create' : 'Update'}</button>
-        </form>
-    )
-}
+  const { lessons } = relatedData;
 
-export default ExamForm
+  return (
+    <form className="flex flex-col gap-8" onSubmit={onSubmit}>
+      <h1 className="text-xl font-semibold">
+        {type === "create" ? "Create a new exam" : "Update the exam"}
+      </h1>
+
+      <div className="flex justify-between flex-wrap gap-4">
+        <InputField
+          label="Exam title"
+          name="title"
+          defaultValue={data?.title}
+          register={register}
+          error={errors?.title}
+        />
+        <InputField
+          label="Start Date"
+          name="startTime"
+          defaultValue={data?.startTime}
+          register={register}
+          error={errors?.startTime}
+          type="datetime-local"
+        />
+        <InputField
+          label="End Date"
+          name="endTime"
+          defaultValue={data?.endTime}
+          register={register}
+          error={errors?.endTime}
+          type="datetime-local"
+        />
+        {data && (
+          <InputField
+            label="Id"
+            name="id"
+            defaultValue={data?.id}
+            register={register}
+            error={errors?.id}
+            hidden
+          />
+        )}
+        <div className="flex flex-col gap-2 w-full md:w-1/4">
+          <label className="text-xs text-gray-500">Lesson</label>
+          <select
+            className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
+            {...register("lessonId")}
+            defaultValue={data?.teachers}
+          >
+            {lessons.map((lesson: { id: number; name: string }) => (
+              <option value={lesson.id} key={lesson.id}>
+                {lesson.name}
+              </option>
+            ))}
+          </select>
+          {errors.lessonId?.message && (
+            <p className="text-xs text-red-400">
+              {errors.lessonId.message.toString()}
+            </p>
+          )}
+        </div>
+      </div>
+      {state.error && (
+        <span className="text-red-500">Something went wrong!</span>
+      )}
+      <button className="bg-blue-400 text-white p-2 rounded-md">
+        {type === "create" ? "Create" : "Update"}
+      </button>
+    </form>
+  );
+};
+
+export default ExamForm;

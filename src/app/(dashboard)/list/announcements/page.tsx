@@ -4,79 +4,86 @@ import Table from '@/components/Table'
 import TableSearch from '@/components/TableSearch'
 import prisma from '@/lib/prisma'
 import { ITEMS_PER_PAGE } from '@/lib/settings'
-import { currentUserId, role } from '@/lib/utils'
+import { auth } from '@clerk/nextjs/server'
 import { Announcement, Class, Prisma } from '@prisma/client'
 import Image from 'next/image'
 import React from 'react'
 
-
-
-const columns = [
-    {
-        header: "Title",
-        accessor: "subjectName"
-    },
-    {
-        header: "Class",
-        accessor: "class",
-        className: "sm:table-cell hidden",
-    },
-    {
-        header: "Date",
-        accessor: "date",
-        className: "sm:table-cell hidden",
-    },
-    ...(role === "admin"
-        ? [{
-            header: "Actions",
-            accessor: "actions",
-        }]
-        : []
-    )
-]
 export type AnnouncementList = Announcement & { class: Class }
 
-const renderRow = (item: AnnouncementList) => (
-    <tr
-        key={item.id}
-        className='border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-mPurpleLight'
-    >
-        <td className='flex items-center gap-4 p-4'>
-
-            <div className='flex flex-col'>
-                <h3 className='font-semibold'>{item.title}</h3>
-            </div>
-        </td>
-        <td className="hidden sm:table-cell text-xs">{item.class?.name||"-"}</td>
-        <td className="hidden sm:table-cell text-xs">
-            {new Intl.DateTimeFormat('en-US').format(item.date)}
-        </td>
-        <td>
-            <div className='flex items-center gap-2'>
-                {
-                    role === 'admin' && (
-                        <>
-                            <FormModal
-                                table='announcement'
-                                type='update'
-                                data={item}
-                            />
-                            <FormModal
-                                table='announcement'
-                                type='delete'
-                                id={item.id}
-                            />
-                        </>
-
-                    )
-                }
-            </div>
-        </td>
-    </tr>
-)
 const AnnouncementsListPage = async ({ searchParams }: {
     searchParams: { [key: string]: string | undefined }
 }) => {
+
+    const { sessionClaims, userId } = auth();
+    const role = (sessionClaims?.metadata as { role?: string })?.role;
+    const currentUserId = userId;
+
+
+
+    const columns = [
+        {
+            header: "Title",
+            accessor: "subjectName"
+        },
+        {
+            header: "Class",
+            accessor: "class",
+            className: "sm:table-cell hidden",
+        },
+        {
+            header: "Date",
+            accessor: "date",
+            className: "sm:table-cell hidden",
+        },
+        ...(role === "admin"
+            ? [{
+                header: "Actions",
+                accessor: "actions",
+            }]
+            : []
+        )
+    ]
+
+    const renderRow = (item: AnnouncementList) => (
+        <tr
+            key={item.id}
+            className='border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-mPurpleLight'
+        >
+            <td className='flex items-center gap-4 p-4'>
+
+                <div className='flex flex-col'>
+                    <h3 className='font-semibold'>{item.title}</h3>
+                </div>
+            </td>
+            <td className="hidden sm:table-cell text-xs">{item.class?.name || "-"}</td>
+            <td className="hidden sm:table-cell text-xs">
+                {new Intl.DateTimeFormat('en-US').format(item.date)}
+            </td>
+            <td>
+                <div className='flex items-center gap-2'>
+                    {
+                        role === 'admin' && (
+                            <>
+                                <FormModal
+                                    table='announcement'
+                                    type='update'
+                                    data={item}
+                                />
+                                <FormModal
+                                    table='announcement'
+                                    type='delete'
+                                    id={item.id}
+                                />
+                            </>
+
+                        )
+                    }
+                </div>
+            </td>
+        </tr>
+    )
+
     const { page, ...queryParams } = searchParams
     const p = page ? parseInt(page) : 1
     const filter: Prisma.AnnouncementWhereInput = {}

@@ -6,7 +6,6 @@ import React from 'react'
 const TeacherPage = () => {
   const { userId } = auth()
 
-  console.log('teacherid =====> ',userId)
 
   return (
     <div className="flex-1 flex xl:flex-row flex-col p-4 gap-4">

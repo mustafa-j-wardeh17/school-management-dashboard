@@ -2,7 +2,6 @@ import Announcements from '@/components/Announcements'
 import BigCalendarContainer from '@/components/BigCalendarContainer'
 import EventCalendar from '@/components/EventCalendar'
 import prisma from '@/lib/prisma'
-import { role } from '@/lib/utils'
 import { auth } from '@clerk/nextjs/server'
 import React from 'react'
 

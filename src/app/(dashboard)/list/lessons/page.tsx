@@ -4,77 +4,83 @@ import Table from '@/components/Table'
 import TableSearch from '@/components/TableSearch'
 import prisma from '@/lib/prisma'
 import { ITEMS_PER_PAGE } from '@/lib/settings'
-import { role } from '@/lib/utils'
+import { auth } from '@clerk/nextjs/server'
 import { Class, Lesson, Prisma, Subject, Teacher } from '@prisma/client'
 import Image from 'next/image'
 import React from 'react'
 
-const columns = [
-    {
-        header: "Subject Name",
-        accessor: "subjectName"
-    },
-    {
-        header: "Class",
-        accessor: "class",
-        className: "table-cell",
-    },
-    {
-        header: "Teacher",
-        accessor: "teacher",
-        className: "sm:table-cell hidden",
-    },
-    ...(role === 'admin' ?
-        [
-            {
-                header: "Actions",
-                accessor: "actions",
-            }
-        ]
-        : []
-    )
-]
-type LessonList = Lesson & { subject: Subject } & { teacher: Teacher } & { class: Class }
-const renderRow = (item: LessonList) => (
-    <tr
-        key={item.id}
-        className='border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-mPurpleLight'
-    >
-        <td className='flex items-center gap-4 p-4'>
 
-            <div className='flex flex-col'>
-                <h3 className='font-semibold'>{item.subject.name}</h3>
-            </div>
-        </td>
-        <td className="table-cell text-xs">{item.class.name}</td>
-        <td className="hidden sm:table-cell text-xs">{item.teacher.name + " " + item.teacher.surname}</td>
-        <td>
-            <div className='flex items-center gap-2'>
-                {
-                    role === 'admin' && (
-                        <>
-                            <FormModal
-                                table='lesson'
-                                type='update'
-                                data={item}
-                            />
-                            <FormModal
-                                table='lesson'
-                                type='delete'
-                                id={item.id}
-                            />
-                        </>
-
-                    )
-                }
-            </div>
-        </td>
-    </tr>
-)
 const LessonListPage = async ({ searchParams }: {
     searchParams: { [key: string]: string | undefined }
 }
 ) => {
+
+    const { sessionClaims } = auth();
+    const role = (sessionClaims?.metadata as { role?: string })?.role;
+
+
+    const columns = [
+        {
+            header: "Subject Name",
+            accessor: "subjectName"
+        },
+        {
+            header: "Class",
+            accessor: "class",
+            className: "table-cell",
+        },
+        {
+            header: "Teacher",
+            accessor: "teacher",
+            className: "sm:table-cell hidden",
+        },
+        ...(role === 'admin' ?
+            [
+                {
+                    header: "Actions",
+                    accessor: "actions",
+                }
+            ]
+            : []
+        )
+    ]
+    type LessonList = Lesson & { subject: Subject } & { teacher: Teacher } & { class: Class }
+    const renderRow = (item: LessonList) => (
+        <tr
+            key={item.id}
+            className='border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-mPurpleLight'
+        >
+            <td className='flex items-center gap-4 p-4'>
+
+                <div className='flex flex-col'>
+                    <h3 className='font-semibold'>{item.subject.name}</h3>
+                </div>
+            </td>
+            <td className="table-cell text-xs">{item.class.name}</td>
+            <td className="hidden sm:table-cell text-xs">{item.teacher.name + " " + item.teacher.surname}</td>
+            <td>
+                <div className='flex items-center gap-2'>
+                    {
+                        role === 'admin' && (
+                            <>
+                                <FormModal
+                                    table='lesson'
+                                    type='update'
+                                    data={item}
+                                />
+                                <FormModal
+                                    table='lesson'
+                                    type='delete'
+                                    id={item.id}
+                                />
+                            </>
+
+                        )
+                    }
+                </div>
+            </td>
+        </tr>
+    )
     const { page, ...queryParams } = searchParams
     const p = page ? parseInt(page) : 1
     const filter: Prisma.LessonWhereInput = {}
