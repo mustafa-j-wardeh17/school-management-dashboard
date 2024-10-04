@@ -107,13 +107,15 @@ const FormModal = ({ table, type, data, id, relatedData }: FormContainerProps & 
             error: false
         })
         const router = useRouter()
+
         useEffect(() => {
             if (state.success) {
-                toast(`Subject has been deleted!`)
-                setOpen(false)
-                router.refresh()
+                toast(`${table} has been deleted!`);
+                setOpen(false);
+                router.refresh();
             }
-        }, [state])
+        }, [state, router]);
+
         console.log(id)
         return type === 'delete' && id ? (
             <form
