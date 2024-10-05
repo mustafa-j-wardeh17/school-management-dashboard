@@ -81,6 +81,83 @@ export const deleteSubject = async (
         }
     }
 }
+export const createLesson = async (
+    curentState: CurrentState,
+    data: SubjectSchema
+) => {
+    try {
+        await prisma.subject.create({
+            data: {
+                name: data.name,
+                teachers: {
+                    connect: data.teachers.map(teacherId => ({ id: teacherId }))
+                }
+            }
+        })
+        return {
+            success: true,
+            error: false
+        }
+    } catch (error) {
+        console.log(error)
+        return {
+            success: false,
+            error: true
+        }
+    }
+}
+export const updateLesson = async (
+    curentState: CurrentState,
+    data: SubjectSchema
+) => {
+    try {
+        await prisma.subject.update({
+            where: {
+                id: data.id
+            },
+            data: {
+                name: data.name,
+                teachers: {
+                    set: data.teachers.map(teacherId => ({ id: teacherId }))
+                }
+            }
+        })
+        return {
+            success: true,
+            error: false
+        }
+    } catch (error) {
+        console.log(error)
+        return {
+            success: false,
+            error: true
+        }
+    }
+}
+export const deleteLesson = async (
+    curentState: CurrentState,
+    data: FormData
+) => {
+    const id = data.get('id') as string
+    try {
+        await prisma.lesson.delete({
+            where: {
+                id: parseInt(id)
+            },
+        })
+        return {
+            success: true,
+            error: false
+        }
+    } catch (error) {
+        console.log(error)
+        return {
+            success: false,
+            error: true
+        }
+    }
+}
+
 export const createClass = async (
     currentState: CurrentState,
     data: ClassSchema

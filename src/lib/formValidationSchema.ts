@@ -21,6 +21,20 @@ export const classSchema = z.object({
 
 export type ClassSchema = z.infer<typeof classSchema>;
 
+
+export const lessonSchema = z.object({
+    id: z.coerce.number().optional(),
+    name: z.string().min(1, { message: "Subject name is required!" }),
+    day: z.enum(["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY"]),
+    startTime: z.coerce.date({ message: "Start Time is required!" }),
+    endTime: z.coerce.date({ message: "End Time is required!" }),
+    classId: z.coerce.number().min(1, { message: "Class name is required!" }),
+    subjectId: z.coerce.number().min(1, { message: "Subject name is required!" }),
+    teacherId: z.coerce.string().min(1, { message: "Grade name is required!" }),
+});
+
+export type LessonSchema = z.infer<typeof lessonSchema>;
+
 export const teacherSchema = z.object({
     id: z.string().optional(),
     username: z

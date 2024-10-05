@@ -1,5 +1,5 @@
 'use client'
-import { deleteAssignment, deleteClass, deleteExam, deleteParent, deleteStudent, deleteSubject, deleteTeacher } from '@/lib/actions';
+import { deleteAssignment, deleteClass, deleteExam, deleteLesson, deleteParent, deleteStudent, deleteSubject, deleteTeacher } from '@/lib/actions';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -17,7 +17,7 @@ const deleteActionMap = {
     parent: deleteParent,
     exam: deleteExam,
     assignment: deleteAssignment,
-    lesson: deleteSubject,
+    lesson: deleteLesson,
     result: deleteSubject,
     attendance: deleteSubject,
     event: deleteSubject,
@@ -80,7 +80,7 @@ const forms: {
     parent: (setOpen, type, data, relatedData) => <ParentForm type={type} data={data} setOpen={setOpen} relatedData={relatedData} />,
     subject: (setOpen, type, data, relatedData) => <SubjectForm type={type} data={data} setOpen={setOpen} relatedData={relatedData} />,
     class: (setOpen, type, data, relatedData) => <ClassForm type={type} data={data} setOpen={setOpen} relatedData={relatedData} />,
-    // lesson: (setOpen, type, data, relatedData) => <LessonForm type={type} data={data} setOpen={setOpen} relatedData={relatedData} />,
+    lesson: (setOpen, type, data, relatedData) => <LessonForm type={type} data={data} setOpen={setOpen} relatedData={relatedData} />,
     exam: (setOpen, type, data, relatedData) => <ExamForm type={type} data={data} setOpen={setOpen} relatedData={relatedData} />,
     assignment: (setOpen, type, data, relatedData) => <AssignmentForm type={type} data={data} setOpen={setOpen} relatedData={relatedData} />,
     // result: (setOpen, type, data, relatedData) => <ResultForm type={type} data={data} setOpen={setOpen} relatedData={relatedData} />,
