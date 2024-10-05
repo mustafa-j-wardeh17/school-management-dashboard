@@ -1,7 +1,7 @@
 "use server"
 
 import { clerkClient } from "@clerk/nextjs/server";
-import { AssignmentSchema, ClassSchema, ExamSchema, ParentSchema, StudentSchema, SubjectSchema, TeacherSchema } from "./formValidationSchema"
+import { AssignmentSchema, ClassSchema, ExamSchema, LessonSchema, ParentSchema, StudentSchema, SubjectSchema, TeacherSchema } from "./formValidationSchema"
 import prisma from "./prisma"
 type CurrentState = { success: boolean; error: boolean };
 
@@ -83,17 +83,22 @@ export const deleteSubject = async (
 }
 export const createLesson = async (
     curentState: CurrentState,
-    data: SubjectSchema
+    data: LessonSchema
 ) => {
     try {
-        await prisma.subject.create({
+
+
+        await prisma.lesson.create({
             data: {
                 name: data.name,
-                teachers: {
-                    connect: data.teachers.map(teacherId => ({ id: teacherId }))
-                }
-            }
-        })
+                day: data.day as "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY",  // Enum field
+                startTime: data.startTime,
+                endTime: data.endTime,
+                classId: data.classId,
+                subjectId: data.subjectId,
+                teacherId: data.teacherId,
+            },
+        });
         return {
             success: true,
             error: false
@@ -108,18 +113,21 @@ export const createLesson = async (
 }
 export const updateLesson = async (
     curentState: CurrentState,
-    data: SubjectSchema
+    data: LessonSchema
 ) => {
     try {
-        await prisma.subject.update({
+        await prisma.lesson.update({
             where: {
                 id: data.id
             },
             data: {
                 name: data.name,
-                teachers: {
-                    set: data.teachers.map(teacherId => ({ id: teacherId }))
-                }
+                day: data.day as "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY",  // Enum field
+                startTime: data.startTime,
+                endTime: data.endTime,
+                classId: data.classId,
+                subjectId: data.subjectId,
+                teacherId: data.teacherId,
             }
         })
         return {

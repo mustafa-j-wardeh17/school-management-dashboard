@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import InputField from '../InputField';
 import { lessonSchema, LessonSchema } from '@/lib/formValidationSchema';
 import { useFormState } from 'react-dom';
-import { createClass, updateClass } from '@/lib/actions';
+import { createClass, createLesson, updateClass, updateLesson } from '@/lib/actions';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 
@@ -28,7 +28,7 @@ const LessonForm = ({
         resolver: zodResolver(lessonSchema),
     });
     const [state, formAction] = useFormState(
-        type === "create" ? createClass : updateClass,
+        type === "create" ? createLesson : updateLesson,
         {
             success: false,
             error: false,
@@ -48,7 +48,11 @@ const LessonForm = ({
             router.refresh();
         }
     }, [state, router, type, setOpen]);
-    const { subjects, teachers, classes } = relatedData;
+    const {
+        subjects,
+        teachers,
+        classes
+    } = relatedData;
     return (
         <form className="flex flex-col gap-8" onSubmit={onSubmit}>
             <h1 className="text-xl font-semibold">
@@ -64,7 +68,7 @@ const LessonForm = ({
                     error={errors?.name}
                 />
                 <div className="flex flex-col gap-2 w-full md:w-1/4">
-                    <label className="text-xs text-gray-500">Supervisor</label>
+                    <label className="text-xs text-gray-500">Teacher</label>
                     <select
                         className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
                         {...register("teacherId")}
@@ -138,6 +142,47 @@ const LessonForm = ({
                         </p>
                     )}
                 </div>
+                <div className="flex flex-col gap-2 w-full md:w-1/4">
+                    <label className="text-xs text-gray-500">Day</label>
+                    <select
+                        className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
+                        {...register("day")}
+                        defaultValue={data?.day}
+                    >
+                        {["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY"].map(
+                            (day) => (
+                                <option
+                                    value={day}
+                                    key={day}
+                                    selected={data && day === data.day}
+                                >
+                                    {day}
+                                </option>
+                            )
+                        )}
+                    </select>
+                    {errors.day?.message && (
+                        <p className="text-xs text-red-400">
+                            {errors.day.message.toString()}
+                        </p>
+                    )}
+                </div>
+                <InputField
+                    label="Start Time"
+                    name="startTime"
+                    defaultValue={data?.startTime.toISOString().slice(0, 16)}
+                    register={register}
+                    error={errors?.startTime}
+                    type="datetime-local"
+                />
+                <InputField
+                    label="End Date"
+                    name="endTime"
+                    defaultValue={data?.endTime.toISOString().slice(0, 16)} // Format the date correctly
+                    register={register}
+                    error={errors?.endTime}
+                    type="datetime-local"
+                />
                 {data && (
                     <InputField
                         label="Id"
