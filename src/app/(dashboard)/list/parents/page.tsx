@@ -1,4 +1,4 @@
-import FormModal from '@/components/FormModal'
+import FormContainer from '@/components/FormContainer'
 import Pagination from '@/components/Pagination'
 import Table from '@/components/Table'
 import TableSearch from '@/components/TableSearch'
@@ -67,12 +67,12 @@ const ParentsListPage = async ({ searchParams }: { searchParams: { [key: string]
                     {
                         role === 'admin' && (
                             <>
-                                <FormModal
+                                <FormContainer
                                     table='parent'
                                     type='update'
                                     data={item}
                                 />
-                                <FormModal
+                                <FormContainer
                                     table='parent'
                                     type='delete'
                                     id={item.id}
@@ -141,7 +141,7 @@ const ParentsListPage = async ({ searchParams }: { searchParams: { [key: string]
                         </button>
                         {
                             role === 'admin' && (
-                                <FormModal
+                                <FormContainer
                                     table='parent'
                                     type='create'
                                 />

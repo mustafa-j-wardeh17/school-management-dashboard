@@ -7,8 +7,6 @@ export const subjectSchema = z.object({
         .string()
         .min(1, { message: 'Subject name is required!' }),
     teachers: z.array(z.string()),
-
-
 });
 
 export type SubjectSchema = z.infer<typeof subjectSchema>;
@@ -82,6 +80,32 @@ export const studentSchema = z.object({
 });
 
 export type StudentSchema = z.infer<typeof studentSchema>;
+
+export const parentSchema = z.object({
+    id: z.string().optional(),
+    username: z
+        .string()
+        .min(3, { message: "Username must be at least 3 characters long!" })
+        .max(20, { message: "Username must be at most 20 characters long!" }),
+    password: z
+        .string()
+        .min(8, { message: "Password must be at least 8 characters long!" })
+        .optional() //optional when edit the teacher
+        .or(z.literal("")),
+    name: z.string().min(1, { message: "First name is required!" }),
+    surname: z.string().min(1, { message: "Last name is required!" }),
+    email: z
+        .string()
+        .email({ message: "Invalid email address!" })
+        .optional()
+        .or(z.literal("")), //mean that it can be empty string
+    phone: z.string(),
+    address: z.string(),
+    students: z.array(z.string()).optional(), // children ids
+
+});
+
+export type ParentSchema = z.infer<typeof parentSchema>;
 
 export const examSchema = z.object({
     id: z.coerce.number().optional(),

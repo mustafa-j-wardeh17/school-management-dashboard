@@ -1,92 +1,104 @@
 'use client'
-import React from 'react'
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import InputField from '../InputField';
-import Image from 'next/image';
+import { toast } from 'react-toastify';
+import { useFormState } from 'react-dom';
+import { useRouter } from 'next/navigation';
+import { createParent, updateParent } from '@/lib/actions';
+import { parentSchema, ParentSchema } from '@/lib/formValidationSchema';
 
-const schema = z.object({
-    username: z
-        .string()
-        .min(3, { message: 'Username must be at least 3 characters long!' })
-        .max(20, { message: 'Username must be at most 20 characters long!' }),
-    email: z
-        .string()
-        .email({ message: "Invalid email address!" }),
-    password: z
-        .string()
-        .min(8, { message: 'Password must be at least 8 characters long!' }),
-    firstName: z
-        .string()
-        .min(1, { message: 'First name is required!' }),
-    lastName: z
-        .string()
-        .min(1, { message: 'Last name is required!' }),
-    phone: z
-        .string()
-        .min(1, { message: 'Phoene is required!' }),
-    address: z
-        .string()
-        .min(8, { message: 'Address is required!' }),
-    bloodType: z
-        .string()
-        .min(8, { message: 'Blood Type is required!' }),
+const ParentForm = ({
+    type,
+    data,
+    setOpen,
+    relatedData,
+}: {
+    type: "create" | "update";
+    data?: any;
+    setOpen: Dispatch<SetStateAction<boolean>>;
+    relatedData?: any;
+}) => {
+    // const [students, setStudents] = useState<any[]>(data?.students || []); // Array of student IDs
+    // const [newStudent, setNewStudent] = useState<string>(''); // Single new student ID
 
-    birthday: z
-        .date({ message: 'Birthday is required!' }),
-    sex: z
-        .enum(['male', 'female'], { message: 'Sex is required!' }),
-    image: z
-        .instanceof(File, { message: 'Image is required!' }),
+    // Function to handle adding a new student
+    // const addStudent = () => {
+    //     if (newStudent.trim()) { // Check if input is not empty
+    //         setStudents([...students, newStudent]); // Add the new student
+    //         setNewStudent(''); // Clear the input after adding
+    //     }
+    // };
 
-});
-
-type Inputs = z.infer<typeof schema>;
-
-const ParentForm = ({ type, data }: { type: 'create' | 'update'; data?: any }) => {
     const {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<Inputs>({
-        resolver: zodResolver(schema),
+    } = useForm<ParentSchema>({
+        resolver: zodResolver(parentSchema),
     });
 
+    const [state, formAction] = useFormState(
+        type === "create" ? createParent : updateParent,
+        {
+            success: false,
+            error: false,
+        }
+    );
+
     const onSubmit = handleSubmit((data) => {
-        console.log(data)
-    })
+        // Directly pass the students array without parsing
+        const parsedData = {
+            ...data,
+        };
+        console.log("================>Parent Page <==================")
+        console.log(parsedData);
+        formAction(parsedData);
+    });
+
+    const router = useRouter();
+
+    useEffect(() => {
+        if (state?.success) {
+            toast(`Parent has been ${type === "create" ? "created" : "updated"}!`);
+            setOpen(false);
+            router.refresh();
+        }
+    }, [state, router, type, setOpen]);
+
+
+    // const { students } = relatedData
+    console.log('parent data =>', data)
     return (
         <form
             onSubmit={onSubmit}
             className='flex flex-col gap-8'
         >
-            <h1 className='text-xl font-semibold'>Create a new teacher</h1>
+            <h1 className='text-xl font-semibold'>{type === 'create' ? 'Create a new parent' : 'Update the parent'}</h1>
             <span className='text-xs text-gray-400 font-medium'> Authentication Information</span>
-            <div className='flex flex-wrap gap-4 justify-between'>
-
+            <div className="flex justify-between flex-wrap gap-4">
                 <InputField
-                    label='username'
-                    name='username'
+                    label="Username"
+                    name="username"
                     defaultValue={data?.username}
                     register={register}
-                    error={errors.username}
+                    error={errors?.username}
                 />
                 <InputField
-                    label='Email'
-                    name='email'
-                    type='email'
+                    label="Email"
+                    name="email"
                     defaultValue={data?.email}
                     register={register}
-                    error={errors.email}
+                    error={errors?.email}
                 />
                 <InputField
-                    label='Password'
-                    name='password'
-                    type='password'
+                    label="Password"
+                    name="password"
+                    type="password"
                     defaultValue={data?.password}
                     register={register}
-                    error={errors.password}
+                    error={errors?.password}
                 />
             </div>
 
@@ -94,17 +106,17 @@ const ParentForm = ({ type, data }: { type: 'create' | 'update'; data?: any }) =
             <div className='flex flex-wrap gap-4 justify-between'>
                 <InputField
                     label='First Name'
-                    name='firstName'
-                    defaultValue={data?.firstName}
+                    name="name"
+                    defaultValue={data?.name}
                     register={register}
-                    error={errors.firstName}
+                    error={errors.name}
                 />
                 <InputField
                     label='Last Name'
-                    name='lastName'
-                    defaultValue={data?.lastName}
+                    name='surname'
+                    defaultValue={data?.surname}
                     register={register}
-                    error={errors.lastName}
+                    error={errors.surname}
                 />
                 <InputField
                     label='Phone'
@@ -120,70 +132,72 @@ const ParentForm = ({ type, data }: { type: 'create' | 'update'; data?: any }) =
                     register={register}
                     error={errors.address}
                 />
-                <InputField
-                    label='Blood Type'
-                    name='bloodType'
-                    defaultValue={data?.bloodType}
-                    register={register}
-                    error={errors.bloodType}
-                />
-                <InputField
-                    label='Blood Type'
-                    name='bloodType'
-                    defaultValue={data?.bloodType}
-                    register={register}
-                    error={errors.bloodType}
-                    type='date'
-                />
+                {data && (
+                    <InputField
+                        label="Id"
+                        name="id"
+                        defaultValue={data?.id}
+                        register={register}
+                        error={errors?.id}
+                        hidden
+                    />
+                )}
                 <div className='flex flex-col gap-2 w-full md:w-1/4'>
-                    <label className='text-xs text-gray-500'>Sex</label>
+                    {/* <label className='text-xs text-gray-500'>Parent's Students</label>
                     <select
-                        defaultValue={data?.sex}
-                        {...register('sex')}
-                        className='ring-[1.5px] ring-gray-100 p-2 rounded-md text-sm w-full'
+                        multiple
+                        className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
+                        {...register("students")}
+                        defaultValue={data?.student}
                     >
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                    </select>
-                    {
-                        errors.sex?.message &&
-                        <p className='text-red-400 text-xs'>
-                            {errors.sex?.message.toString()}
+                        {students.map((student: { id: number; name: string }) => (
+                            <option value={student.id} key={student.id}>
+                                {student.name}
+                            </option>
+                        ))}
+                    </select> */}
+                    {/* {errors.students?.message && (
+                        <p className="text-xs text-red-400">
+                            {errors.students.message.toString()}
                         </p>
-                    }
-                </div>
-                <div className='flex flex-col justify-center items-center gap-2 w-full md:w-1/4'>
-                    <label
-                        className='text-xs cursor-pointer text-gray-500 flex items-center gap-2 '
-                        htmlFor='img'
-                    >
-                        <Image
-                            src={'/upload.png'}
-                            alt='upload image'
-                            width={28}
-                            height={28}
+                    )} */}
+                    {/* Input to type a new student's ID */}
+                    {/* <div className='flex flex-row gap-2 items-center'>
+                        <button type='button' onClick={addStudent} className="w-6 h-6 rounded-full bg-blue-500 text-white">
+                            +
+                        </button>
+                        <input
+                            type="text"
+                            value={newStudent}
+                            onChange={(e) => setNewStudent(e.target.value)}
+                            placeholder="Enter student's id"
+                            className="ring-[1.5px] ring-gray-100 p-2 rounded-md text-xs w-full"
                         />
-                        <span>Upload a photo</span>
-                    </label>
-                    <input
-                        id='img'
-                        type="file"
-                        {...register("image")}
-                        className='hidden'
+                    </div> */}
+
+                    {/* Display list of added students */}
+                    {/* <div className='flex flex-row flex-wrap text-xs'>
+                        <span>{students.join(', ')}</span>
+                    </div> */}
+
+                    {/* Hidden input for students */}
+                    {/* <input
+                        type="hidden"
+                        value={JSON.stringify(students)} // Ensure it's stored as a string in the hidden input
+                        {...register('students')}
                     />
 
-                    {
-                        errors.sex?.message &&
-                        <p className='text-red-400 text-xs'>
-                            {errors.sex?.message.toString()}
+                    {errors.students?.message && (
+                        <p className="text-xs text-red-400">
+                            {errors.students.message.toString()}
                         </p>
-                    }
+                    )}*/}
                 </div>
             </div>
 
             <button className='bg-blue-400 text-white p-2 rounded-md'>{type === 'create' ? 'Create' : 'Update'}</button>
         </form>
-    )
-}
+    );
+};
 
-export default ParentForm
+export default ParentForm;
