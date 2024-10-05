@@ -1,7 +1,7 @@
 "use server"
 
 import { clerkClient } from "@clerk/nextjs/server";
-import { ClassSchema, ExamSchema, StudentSchema, SubjectSchema, TeacherSchema } from "./formValidationSchema"
+import { AssignmentSchema, ClassSchema, ExamSchema, StudentSchema, SubjectSchema, TeacherSchema } from "./formValidationSchema"
 import prisma from "./prisma"
 type CurrentState = { success: boolean; error: boolean };
 
@@ -425,6 +425,76 @@ export const deleteExam = async (
 
     try {
         await prisma.exam.delete({
+            where: {
+                id: parseInt(id),
+                // ...(role === "teacher" ? { lesson: { teacherId: userId! } } : {}),
+            },
+        });
+
+        return { success: true, error: false };
+    } catch (err) {
+        console.log(err);
+        return { success: false, error: true };
+    }
+}
+export const createAssignment = async (
+    currentState: CurrentState,
+    data: AssignmentSchema
+) => {
+    try {
+
+        await prisma.assignment.create({
+            data: {
+                title: data.title,
+                startDate: data.startDate,
+                dueDate: data.endDate,
+                lessonId: data.lessonId,
+            },
+        });
+
+        // revalidatePath("/list/subjects");
+        return { success: true, error: false };
+    } catch (err) {
+        console.log(err);
+        return { success: false, error: true };
+    }
+};
+
+export const updateAssignment = async (
+    currentState: CurrentState,
+    data: AssignmentSchema
+) => {
+
+    try {
+
+        await prisma.assignment.update({
+            where: {
+                id: data.id,
+            },
+            data: {
+                title: data.title,
+                startDate: data.startDate,
+                dueDate: data.endDate,
+                lessonId: data.lessonId,
+            },
+        });
+
+        // revalidatePath("/list/subjects");
+        return { success: true, error: false };
+    } catch (err) {
+        console.log(err);
+        return { success: false, error: true };
+    }
+};
+
+export const deleteAssignment = async (
+    currentState: CurrentState,
+    data: FormData
+) => {
+    const id = data.get("id") as string;
+
+    try {
+        await prisma.assignment.delete({
             where: {
                 id: parseInt(id),
                 // ...(role === "teacher" ? { lesson: { teacherId: userId! } } : {}),
