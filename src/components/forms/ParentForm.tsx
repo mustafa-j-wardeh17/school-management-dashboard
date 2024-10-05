@@ -68,8 +68,7 @@ const ParentForm = ({
     }, [state, router, type, setOpen]);
 
 
-    // const { students } = relatedData
-    console.log('parent data =>', data)
+    const { students } = relatedData
     return (
         <form
             onSubmit={onSubmit}
@@ -142,57 +141,6 @@ const ParentForm = ({
                         hidden
                     />
                 )}
-                <div className='flex flex-col gap-2 w-full md:w-1/4'>
-                    {/* <label className='text-xs text-gray-500'>Parent's Students</label>
-                    <select
-                        multiple
-                        className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
-                        {...register("students")}
-                        defaultValue={data?.student}
-                    >
-                        {students.map((student: { id: number; name: string }) => (
-                            <option value={student.id} key={student.id}>
-                                {student.name}
-                            </option>
-                        ))}
-                    </select> */}
-                    {/* {errors.students?.message && (
-                        <p className="text-xs text-red-400">
-                            {errors.students.message.toString()}
-                        </p>
-                    )} */}
-                    {/* Input to type a new student's ID */}
-                    {/* <div className='flex flex-row gap-2 items-center'>
-                        <button type='button' onClick={addStudent} className="w-6 h-6 rounded-full bg-blue-500 text-white">
-                            +
-                        </button>
-                        <input
-                            type="text"
-                            value={newStudent}
-                            onChange={(e) => setNewStudent(e.target.value)}
-                            placeholder="Enter student's id"
-                            className="ring-[1.5px] ring-gray-100 p-2 rounded-md text-xs w-full"
-                        />
-                    </div> */}
-
-                    {/* Display list of added students */}
-                    {/* <div className='flex flex-row flex-wrap text-xs'>
-                        <span>{students.join(', ')}</span>
-                    </div> */}
-
-                    {/* Hidden input for students */}
-                    {/* <input
-                        type="hidden"
-                        value={JSON.stringify(students)} // Ensure it's stored as a string in the hidden input
-                        {...register('students')}
-                    />
-
-                    {errors.students?.message && (
-                        <p className="text-xs text-red-400">
-                            {errors.students.message.toString()}
-                        </p>
-                    )}*/}
-                </div>
             </div>
 
             <button className='bg-blue-400 text-white p-2 rounded-md'>{type === 'create' ? 'Create' : 'Update'}</button>
