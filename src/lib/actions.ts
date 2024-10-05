@@ -691,3 +691,73 @@ export const deleteAssignment = async (
         return { success: false, error: true };
     }
 }
+export const createResult = async (
+    currentState: CurrentState,
+    data: AssignmentSchema
+) => {
+    try {
+
+        await prisma.assignment.create({
+            data: {
+                title: data.title,
+                startDate: data.startDate,
+                dueDate: data.endDate,
+                lessonId: data.lessonId,
+            },
+        });
+
+        // revalidatePath("/list/subjects");
+        return { success: true, error: false };
+    } catch (err) {
+        console.log(err);
+        return { success: false, error: true };
+    }
+};
+
+export const updateResult = async (
+    currentState: CurrentState,
+    data: AssignmentSchema
+) => {
+
+    try {
+
+        await prisma.assignment.update({
+            where: {
+                id: data.id,
+            },
+            data: {
+                title: data.title,
+                startDate: data.startDate,
+                dueDate: data.endDate,
+                lessonId: data.lessonId,
+            },
+        });
+
+        // revalidatePath("/list/subjects");
+        return { success: true, error: false };
+    } catch (err) {
+        console.log(err);
+        return { success: false, error: true };
+    }
+};
+
+export const deleteResult = async (
+    currentState: CurrentState,
+    data: FormData
+) => {
+    const id = data.get("id") as string;
+
+    try {
+        await prisma.result.delete({
+            where: {
+                id: parseInt(id),
+                // ...(role === "teacher" ? { lesson: { teacherId: userId! } } : {}),
+            },
+        });
+
+        return { success: true, error: false };
+    } catch (err) {
+        console.log(err);
+        return { success: false, error: true };
+    }
+}
