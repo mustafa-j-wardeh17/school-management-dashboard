@@ -5,13 +5,12 @@ import * as SignIn from "@clerk/elements/sign-in";
 import { useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const LoginPage = () => {
     const { isLoaded, isSignedIn, user } = useUser();
 
     const router = useRouter();
-
     useEffect(() => {
         const role = user?.publicMetadata.role;
 
@@ -57,9 +56,18 @@ const LoginPage = () => {
                     </Clerk.Field>
                     <SignIn.Action
                         submit
-                        className="bg-blue-500 text-white my-1 rounded-md text-sm p-[10px]"
+                        className="bg-blue-500 text-white flex items-center justify-center my-1 rounded-md text-sm p-[10px]"
                     >
-                        Sign In
+                        {
+                            !isSignedIn
+                                ? ("Sign In")
+                                : (
+                                    <div className="flex items-center gap-2">
+                                        <p>Signing in</p>
+                                        <div className="w-5 h-5 border-white border-t-2 rounded-full animate-spin" />
+                                    </div>
+                                )
+                        }
                     </SignIn.Action>
                 </SignIn.Step>
             </SignIn.Root>
