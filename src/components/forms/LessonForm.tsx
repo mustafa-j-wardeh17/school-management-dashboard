@@ -43,7 +43,7 @@ const LessonForm = ({
 
     useEffect(() => {
         if (state.success) {
-            toast(`Subject has been ${type === "create" ? "created" : "updated"}!`);
+            toast(`Lesson has been ${type === "create" ? "created" : "updated"}!`);
             setOpen(false);
             router.refresh();
         }
@@ -56,7 +56,7 @@ const LessonForm = ({
     return (
         <form className="flex flex-col gap-8" onSubmit={onSubmit}>
             <h1 className="text-xl font-semibold">
-                {type === "create" ? "Create a new class" : "Update the class"}
+                {type === "create" ? "Create a new lesson" : "Update the lesson"}
             </h1>
 
             <div className="flex justify-between flex-wrap gap-4">
