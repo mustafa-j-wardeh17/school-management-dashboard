@@ -123,7 +123,7 @@ export type ParentSchema = z.infer<typeof parentSchema>;
 
 export const examSchema = z.object({
     id: z.coerce.number().optional(),
-    title: z.string().min(1, { message: "Title name is required!" }),
+    title: z.string().min(1, { message: "Exam title is required!" }),
     startTime: z.coerce.date({ message: "Start time is required!" }),
     endTime: z.coerce.date({ message: "End time is required!" }),
     lessonId: z.coerce.number({ message: "Lesson is required!" }),
@@ -134,7 +134,7 @@ export type ExamSchema = z.infer<typeof examSchema>;
 
 export const assignmentSchema = z.object({
     id: z.coerce.number().optional(),
-    title: z.string().min(1, { message: "Title name is required!" }),
+    title: z.string().min(1, { message: "Assignment Title is required!" }),
     startDate: z.coerce.date({ message: "Start time is required!" }),
     endDate: z.coerce.date({ message: "End time is required!" }),
     lessonId: z.coerce.number({ message: "Lesson is required!" }),
@@ -145,7 +145,7 @@ export type AssignmentSchema = z.infer<typeof assignmentSchema>;
 
 export const resultSchema = z.object({
     id: z.coerce.number().optional(),
-    score: z.number().min(1, { message: "Title name is required!" }),
+    score: z.coerce.number(),
     studentId: z.coerce.string({ message: "Student is required!" }),
     assignmentId: z.coerce.number().optional(),
     examId: z.coerce.number().optional(),

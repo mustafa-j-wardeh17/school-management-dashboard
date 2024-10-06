@@ -75,6 +75,7 @@ const ResultForm = ({
           defaultValue={data?.score}
           register={register}
           error={errors?.score}
+          type="number"
         />
         {data && (
           <InputField
@@ -112,9 +113,9 @@ const ResultForm = ({
             {...register("assignmentId")}
             defaultValue={data?.assignmentId}
           >
-            {assignments.map((assignment: { id: number; name: string }) => (
+            {assignments.map((assignment: { id: number; title: string }) => (
               <option value={assignment.id} key={assignment.id}>
-                {assignment.name}
+                {assignment.title}
               </option>
             ))}
           </select>
@@ -131,9 +132,9 @@ const ResultForm = ({
             {...register("examId")}
             defaultValue={data?.examId}
           >
-            {exams.map((exam: { id: number; name: string }) => (
+            {exams.map((exam: { id: number; title: string }) => (
               <option value={exam.id} key={exam.id}>
-                {exam.name}
+                {exam.title}
               </option>
             ))}
           </select>
