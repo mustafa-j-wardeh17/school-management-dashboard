@@ -1,4 +1,4 @@
-import FormModal from '@/components/FormModal'
+import FormContainer from '@/components/FormContainer'
 import Pagination from '@/components/Pagination'
 import Table from '@/components/Table'
 import TableSearch from '@/components/TableSearch'
@@ -91,12 +91,12 @@ const LessonListPage = async ({ searchParams }: {
                     {
                         role === 'admin' && (
                             <>
-                                <FormModal
+                                <FormContainer
                                     table='event'
                                     type='update'
                                     data={item}
                                 />
-                                <FormModal
+                                <FormContainer
                                     table='event'
                                     type='delete'
                                     id={item.id}
@@ -133,49 +133,32 @@ const LessonListPage = async ({ searchParams }: {
     // --------------------------- First Way ------------------------------
     // --------------------------------------------------------------------
     // ROLE CONDITIONS
-    // switch (role) {
-    //     case 'admin':
-    //         break;
-    //     case 'teacher':
-    //         filter.OR = [
-    //             { classId: null },
-    //             { class: { lessons: { some: { teacherId: currentUserId! } } } },
-    //         ]
-    //         break;
-    //     case 'student':
-    //         filter.OR = [
-    //             { classId: null },
-    //             { class: { students: { some: { id: currentUserId! } } } },
-    //         ]
-    //         break;
-    //     case 'parent':
-    //         filter.OR = [
-    //             { classId: null },
-    //             { class: { students: { some: { parentId: currentUserId! } } } },
-    //         ]
-    //         break;
-    //     default:
-    //         break;
-    // }
+    switch (role) {
+        case 'admin':
+            break;
+        case 'teacher':
+            filter.OR = [
+                { classId: null },
+                { class: { lessons: { some: { teacherId: currentUserId! } } } },
+            ]
+            break;
+        case 'student':
+            filter.OR = [
+                { classId: null },
+                { class: { students: { some: { id: currentUserId! } } } },
+            ]
+            break;
+        case 'parent':
+            filter.OR = [
+                { classId: null },
+                { class: { students: { some: { parentId: currentUserId! } } } },
+            ]
+            break;
+        default:
+            break;
+    }
 
-    // --------------------------------------------------------------------
-    // --------------------------- Second Way------------------------------
-    // --------------------------------------------------------------------
 
-    // ROLE CONDITIONS
-
-    const roleConditions = {
-        teacher: { lessons: { some: { teacherId: currentUserId! } } },
-        student: { students: { some: { id: currentUserId! } } },
-        parent: { students: { some: { parentId: currentUserId! } } },
-    };
-
-    filter.OR = [
-        { classId: null },
-        {
-            class: roleConditions[role as keyof typeof roleConditions] || {},
-        },
-    ];
 
     const [data, count] = await prisma.$transaction([
         prisma.event.findMany({
@@ -190,6 +173,8 @@ const LessonListPage = async ({ searchParams }: {
             where: filter,
         })
     ])
+
+    console.log(JSON.stringify(data))
     return (
         <div className='bg-white rounded-md p-4 m-4 mt-0'>
             {/* TOP */}
@@ -216,7 +201,7 @@ const LessonListPage = async ({ searchParams }: {
                         </button>
                         {
                             role === 'admin' && (
-                                <FormModal
+                                <FormContainer
                                     table='event'
                                     type='create'
                                 />

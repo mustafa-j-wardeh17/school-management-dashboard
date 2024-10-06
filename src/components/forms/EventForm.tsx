@@ -97,12 +97,12 @@ const EventForm = ({
                         className='ring-[1.5px] ring-gray-100 p-2 rounded-md text-sm w-full'
                     >
                         {
-                            classes.map((classItem: { id: number, name: string, capacity: number, _count: { students: number } }) => (
+                            classes.map((classItem: { id: number, name: string }) => (
                                 <option
                                     key={classItem.id}
                                     value={classItem.id}
                                 >
-                                    {classItem.name} - {classItem._count.students + "/" + classItem.capacity}{" "} Capacity
+                                    {classItem.name} 
                                 </option>
                             ))
                         }
@@ -114,6 +114,22 @@ const EventForm = ({
                         </p>
                     }
                 </div>
+                <InputField
+                    label='Start Time'
+                    name='startTime'
+                    defaultValue={data?.startTime.toISOString().split("T")[0]}
+                    register={register}
+                    error={errors.startTime}
+                    type='date'
+                />
+                <InputField
+                    label='End Time'
+                    name='endTime'
+                    defaultValue={data?.endTime.toISOString().split("T")[0]}
+                    register={register}
+                    error={errors.endTime}
+                    type='date'
+                />
             </div>
 
 
