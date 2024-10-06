@@ -80,13 +80,56 @@ const FormContainer = async ({ table, type, data, id }: FormContainerProps) => {
                 relatedData = { lessons: assignmentLessons || [] };
                 break;
             case "result":
-                const resultLessons = await prisma.lesson.findMany({
+                // Find exams associated with the teacher
+                const resultExams = await prisma.exam.findMany({
                     where: {
-                        ...(role === "teacher" ? { teacherId: currentUserId! } : {}),
+                        ...(role === "teacher"
+                            ? {
+                                lesson: {
+                                    teacherId: currentUserId!,
+                                }
+                            }
+                            : {}
+                        ),
                     },
-                    select: { id: true, name: true },
+                    select: { id: true, title: true },
                 });
-                relatedData = { lessons: resultLessons || [] };
+
+                // Find assignments associated with the teacher
+                const resultAssignments = await prisma.assignment.findMany({
+                    where: {
+                        ...(role === "teacher"
+                            ? {
+                                lesson: {
+                                    teacherId: currentUserId!,
+                                }
+                            }
+                            : {}
+                        ),
+                    },
+                    select: { id: true, title: true },
+                });
+
+                // Find students associated with the teacher's classes
+                const resultStudents = await prisma.student.findMany({
+                    where: {
+                        ...(role === 'teacher'
+                            ? {
+                                class: {
+                                    lessons: {
+                                        some: {
+                                            teacherId: currentUserId!,
+                                        },
+                                    },
+                                }
+                            }
+                            : {}
+                        )
+                    },
+                    select: { id: true, name: true, surname: true },
+                });
+
+                relatedData = { exams: resultExams, assignments: resultAssignments, students: resultStudents };
                 break;
             default:
                 break;
