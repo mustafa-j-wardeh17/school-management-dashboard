@@ -1,7 +1,7 @@
 "use server"
 
 import { clerkClient } from "@clerk/nextjs/server";
-import { AssignmentSchema, ClassSchema, ExamSchema, LessonSchema, ParentSchema, StudentSchema, SubjectSchema, TeacherSchema } from "./formValidationSchema"
+import { AssignmentSchema, ClassSchema, ExamSchema, LessonSchema, ParentSchema, ResultSchema, StudentSchema, SubjectSchema, TeacherSchema } from "./formValidationSchema"
 import prisma from "./prisma"
 type CurrentState = { success: boolean; error: boolean };
 
@@ -693,18 +693,30 @@ export const deleteAssignment = async (
 }
 export const createResult = async (
     currentState: CurrentState,
-    data: AssignmentSchema
+    data: ResultSchema
 ) => {
     try {
+        if (data.assignmentId) {
+            await prisma.result.create({
+                data: {
+                    score: data.score,
+                    studentId: data.studentId,
+                    assignmentId: data.assignmentId,
+                },
+            });
+        }
+        else if (data.examId) {
+            await prisma.result.create({
+                data: {
+                    score: data.score,
+                    studentId: data.studentId,
+                    examId: data.examId,
+                },
+            });
+        } else {
+            return { success: false, error: true };
+        }
 
-        await prisma.assignment.create({
-            data: {
-                title: data.title,
-                startDate: data.startDate,
-                dueDate: data.endDate,
-                lessonId: data.lessonId,
-            },
-        });
 
         // revalidatePath("/list/subjects");
         return { success: true, error: false };
@@ -716,23 +728,36 @@ export const createResult = async (
 
 export const updateResult = async (
     currentState: CurrentState,
-    data: AssignmentSchema
+    data: ResultSchema
 ) => {
-
     try {
+        if (data.assignmentId) {
+            await prisma.result.update({
+                where: {
+                    id: data.id
+                },
 
-        await prisma.assignment.update({
-            where: {
-                id: data.id,
-            },
-            data: {
-                title: data.title,
-                startDate: data.startDate,
-                dueDate: data.endDate,
-                lessonId: data.lessonId,
-            },
-        });
-
+                data: {
+                    score: data.score,
+                    studentId: data.studentId,
+                    assignmentId: data.assignmentId,
+                },
+            });
+        }
+        else if (data.examId) {
+            await prisma.result.update({
+                where: {
+                    id: data.id
+                },
+                data: {
+                    score: data.score,
+                    studentId: data.studentId,
+                    examId: data.examId,
+                },
+            });
+        } else {
+            return { success: false, error: true };
+        }
         // revalidatePath("/list/subjects");
         return { success: true, error: false };
     } catch (err) {

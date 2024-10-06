@@ -53,7 +53,7 @@ const ResultForm = ({
 
   useEffect(() => {
     if (state.success) {
-      toast(`Exam has been ${type === "create" ? "created" : "updated"}!`);
+      toast(`Result has been ${type === "create" ? "created" : "updated"}!`);
       setOpen(false);
       router.refresh();
     }
@@ -64,12 +64,12 @@ const ResultForm = ({
   return (
     <form className="flex flex-col gap-8" onSubmit={onSubmit}>
       <h1 className="text-xl font-semibold">
-        {type === "create" ? "Create a new exam" : "Update the exam"}
+        {type === "create" ? "Create a new result" : "Update the result"}
       </h1>
 
       <div className="flex justify-between flex-wrap gap-4">
         <InputField
-          label="Exam title"
+          label="Result title"
           name="title"
           defaultValue={data?.title}
           register={register}
