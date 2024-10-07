@@ -81,12 +81,12 @@ const menuItems = [
         href: "/list/events",
         visible: ["admin", "teacher", "student", "parent"],
       },
-      {
-        icon: "/message.png",
-        label: "Messages",
-        href: "/list/messages",
-        visible: ["admin", "teacher", "student", "parent"],
-      },
+      // {
+      //   icon: "/message.png",
+      //   label: "Messages",
+      //   href: "/list/messages",
+      //   visible: ["admin", "teacher", "student", "parent"],
+      // },
       {
         icon: "/announcement.png",
         label: "Announcements",
@@ -130,48 +130,48 @@ export const Menu = () => {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   return (
     <div className="mt-4 text-sm">
-    {menuItems.map((i) => (
-      <div key={i.title} className="flex flex-col gap-2">
-        <span className="hidden lg:block text-gray-400 font-light my-4">
-          {i.title}
-        </span>
-        {i.items.map((item) => {
-          if (item.visible.includes(role)) {
-            const isActive = pathname === item.href; // Check if the current path matches the item's href
-            return (
-              <div
-                key={`nav-${item.label}`}
-                className="relative"
-                onMouseEnter={() => setHoveredItem(item.label)}
-                onMouseLeave={() => setHoveredItem(null)}
-              >
-                {/* The link */}
-                <Link
-                  href={item.href}
-                  className={`flex items-center justify-center lg:justify-start gap-4 text-gray-500 py-2 md:px-2 rounded-md hover:bg-mSkyLight ${isActive ? "bg-mSkyLight" : ""
-                    }`} // Add bg-mSkyLight if the link is active
+      {menuItems.map((i) => (
+        <div key={i.title} className="flex flex-col gap-2">
+          <span className="hidden lg:block text-gray-400 font-light my-4">
+            {i.title}
+          </span>
+          {i.items.map((item) => {
+            if (item.visible.includes(role)) {
+              const isActive = pathname === item.href; // Check if the current path matches the item's href
+              return (
+                <div
+                  key={`nav-${item.label}`}
+                  className="relative"
+                  onMouseEnter={() => setHoveredItem(item.label)}
+                  onMouseLeave={() => setHoveredItem(null)}
                 >
-                  <Image
-                    src={item.icon}
-                    alt={`item-${item.label}`}
-                    width={20}
-                    height={20}
-                  />
-                  <span className="hidden lg:block">{item.label}</span>
-                </Link>
+                  {/* The link */}
+                  <Link
+                    href={item.href}
+                    className={`flex items-center justify-center lg:justify-start gap-4 text-gray-500 py-2 md:px-2 rounded-md hover:bg-mSkyLight ${isActive ? "bg-mSkyLight" : ""
+                      }`} // Add bg-mSkyLight if the link is active
+                  >
+                    <Image
+                      src={item.icon}
+                      alt={`item-${item.label}`}
+                      width={20}
+                      height={20}
+                    />
+                    <span className="hidden lg:block">{item.label}</span>
+                  </Link>
 
-                {/* Hover title div for screens < lg */}
-                {hoveredItem === item.label && (
-                  <div className="lg:hidden absolute left-[40px] top-1/2 transform -translate-y-1/2 bg-gray-700 text-white text-xs px-2 py-1 rounded-md">
-                    {item.label}
-                  </div>
-                )}
-              </div>
-            );
-          }
-        })}
-      </div>
-    ))}
-  </div>
+                  {/* Hover title div for screens < lg */}
+                  {hoveredItem === item.label && (
+                    <div className="lg:hidden absolute left-[40px] top-1/2 transform -translate-y-1/2 bg-gray-700 text-white text-xs px-2 py-1 rounded-md">
+                      {item.label}
+                    </div>
+                  )}
+                </div>
+              );
+            }
+          })}
+        </div>
+      ))}
+    </div>
   );
 };
