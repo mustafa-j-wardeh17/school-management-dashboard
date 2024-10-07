@@ -137,6 +137,12 @@ const FormContainer = async ({ table, type, data, id }: FormContainerProps) => {
                 });
                 relatedData = { classes: eventClasses };
                 break;
+            case "announcement":
+                const announcementClasses = await prisma.class.findMany({
+                    select: { id: true, name: true },
+                });
+                relatedData = { classes: announcementClasses };
+                break;
             default:
                 break;
         }

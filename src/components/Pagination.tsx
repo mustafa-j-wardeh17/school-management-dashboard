@@ -12,8 +12,14 @@ const Pagination = ({ page, count }: paginationProps) => {
   const hasNext = ITEMS_PER_PAGE * (page - 1) + ITEMS_PER_PAGE < count
   const changePage = (newPage: number) => {
     const params = new URLSearchParams(window.location.search)
-    params.set('page', newPage.toString())
-    router.push(`${window.location.pathname}?${params}`)
+
+    if (newPage === 1 || !newPage) {
+      params.delete('page')
+      router.push(`${window.location.pathname}?${params}`)
+    } else {
+      params.set('page', newPage.toString())
+      router.push(`${window.location.pathname}?${params}`)
+    }
   }
   return (
     <div className='flex justify-between p-4 items-center text-gray-500'>

@@ -1,4 +1,4 @@
-import FormModal from '@/components/FormModal'
+import FormContainer from '@/components/FormContainer'
 import Pagination from '@/components/Pagination'
 import Table from '@/components/Table'
 import TableSearch from '@/components/TableSearch'
@@ -65,12 +65,12 @@ const AnnouncementsListPage = async ({ searchParams }: {
                     {
                         role === 'admin' && (
                             <>
-                                <FormModal
+                                <FormContainer
                                     table='announcement'
                                     type='update'
                                     data={item}
                                 />
-                                <FormModal
+                                <FormContainer
                                     table='announcement'
                                     type='delete'
                                     id={item.id}
@@ -104,19 +104,31 @@ const AnnouncementsListPage = async ({ searchParams }: {
         }
     }
     // ROLE CONDITIONS
+    switch (role) {
+        case 'admin':
+            break;
+        case 'teacher':
+            filter.OR = [
+                { classId: null },
+                { class: { lessons: { some: { teacherId: currentUserId! } } } },
+            ]
+            break;
+        case 'student':
+            filter.OR = [
+                { classId: null },
+                { class: { students: { some: { id: currentUserId! } } } },
+            ]
+            break;
+        case 'parent':
+            filter.OR = [
+                { classId: null },
+                { class: { students: { some: { parentId: currentUserId! } } } },
+            ]
+            break;
+        default:
+            break;
+    }
 
-    const roleConditions = {
-        teacher: { lessons: { some: { teacherId: currentUserId! } } },
-        student: { students: { some: { id: currentUserId! } } },
-        parent: { students: { some: { parentId: currentUserId! } } },
-    };
-
-    filter.OR = [
-        { classId: null },
-        {
-            class: roleConditions[role as keyof typeof roleConditions] || {},
-        },
-    ];
     const [data, count] = await prisma.$transaction([
         prisma.announcement.findMany({
             where: filter,
@@ -156,7 +168,7 @@ const AnnouncementsListPage = async ({ searchParams }: {
                         </button>
                         {
                             role === 'admin' && (
-                                <FormModal
+                                <FormContainer
                                     table='announcement'
                                     type='create'
                                 />
