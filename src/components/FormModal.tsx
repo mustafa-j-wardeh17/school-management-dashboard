@@ -1,5 +1,5 @@
 'use client'
-import { deleteAssignment, deleteClass, deleteEvent, deleteExam, deleteLesson, deleteParent, deleteResult, deleteStudent, deleteSubject, deleteTeacher } from '@/lib/actions';
+import { deleteAnnouncement, deleteAssignment, deleteClass, deleteEvent, deleteExam, deleteLesson, deleteParent, deleteResult, deleteStudent, deleteSubject, deleteTeacher } from '@/lib/actions';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -21,7 +21,7 @@ const deleteActionMap = {
     result: deleteResult,
     event: deleteEvent,
     attendance: deleteSubject,
-    announcement: deleteSubject,
+    announcement: deleteAnnouncement,
 }
 
 // This Loading Method is slow For client Components
