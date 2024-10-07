@@ -1,10 +1,46 @@
 import { Menu } from '@/components/Menu'
 import Navbar from '@/components/Navbar'
+import prisma from '@/lib/prisma'
+import { auth } from '@clerk/nextjs/server'
+import { Prisma } from '@prisma/client'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 
-const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
+const DashboardLayout = async ({ children }: { children: React.ReactNode }) => {
+    const { sessionClaims, userId } = auth();
+    const role = (sessionClaims?.metadata as { role?: string })?.role;
+    const currentUserId = userId;
+
+
+    const filter: Prisma.AnnouncementWhereInput = {}
+    switch (role) {
+        case 'admin':
+            break;
+        case 'teacher':
+            filter.OR = [
+                { classId: null },
+                { class: { lessons: { some: { teacherId: currentUserId! } } } },
+            ]
+            break;
+        case 'student':
+            filter.OR = [
+                { classId: null },
+                { class: { students: { some: { id: currentUserId! } } } },
+            ]
+            break;
+        case 'parent':
+            filter.OR = [
+                { classId: null },
+                { class: { students: { some: { parentId: currentUserId! } } } },
+            ]
+            break;
+        default:
+            break;
+    }
+    const announcementCount = await prisma.announcement.count({
+        where: filter
+    })
     return (
         <div className='h-screen flex'>
             {/* Menu */}
@@ -22,7 +58,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
             </div>
             {/* Content */}
             <div className='w-[86%] flex flex-col lg:w-[84%] md:w-[92%] xl:w-[86%] bg-[#F7F8FA] overflow-scroll' >
-                <Navbar />
+                <Navbar announcementCount={announcementCount} />
                 {children}
             </div>
         </div>

@@ -3,7 +3,7 @@ import { currentUser } from '@clerk/nextjs/server'
 import Image from 'next/image'
 import React from 'react'
 
-const Navbar = async () => {
+const Navbar = async ({ announcementCount }: { announcementCount: number }) => {
 
     const user = await currentUser()
     const role = user?.publicMetadata.role as string
@@ -41,7 +41,7 @@ const Navbar = async () => {
                         height={20}
                     />
                     <div className=' absolute -top-2 -right-2 bg-purple-500 text-xs text-white w-4 h-4 flex items-center justify-center rounded-full '>
-                        1
+                        {announcementCount}
                     </div>
                 </div>
                 <div className='flex flex-col'>
