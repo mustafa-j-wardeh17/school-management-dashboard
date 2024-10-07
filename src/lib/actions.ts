@@ -1,7 +1,7 @@
 "use server"
 
 import { clerkClient } from "@clerk/nextjs/server";
-import { AnnouncementSchema, AssignmentSchema, ClassSchema, EventSchema, ExamSchema, LessonSchema, ParentSchema, ResultSchema, StudentSchema, SubjectSchema, TeacherSchema } from "./formValidationSchema"
+import { AnnouncementSchema, AssignmentSchema, AttendanceSchema, ClassSchema, EventSchema, ExamSchema, LessonSchema, ParentSchema, ResultSchema, StudentSchema, SubjectSchema, TeacherSchema } from "./formValidationSchema"
 import prisma from "./prisma"
 type CurrentState = { success: boolean; error: boolean };
 
@@ -234,7 +234,9 @@ export const createTeacher = async (
             username: data.username,
             password: data.password,
             firstName: data.name,
-            lastName: data.surname
+            lastName: data.surname,
+            publicMetadata: { role: "teacher" }
+
         })
         //create user to clerk
         await prisma.teacher.create({
@@ -887,6 +889,64 @@ export const deleteAnnouncement = async (
 
     try {
         await prisma.announcement.delete({
+            where: {
+                id: parseInt(id),
+            },
+        });
+
+        return { success: true, error: false };
+    } catch (err) {
+        console.log(err);
+        return { success: false, error: true };
+    }
+}
+
+
+export const createAttendance = async (
+    currentState: CurrentState,
+    data: AttendanceSchema
+) => {
+    try {
+        await prisma.attendance.create({
+            data
+        });
+        // revalidatePath("/list/events");
+        return { success: true, error: false };
+    } catch (err) {
+        console.log(err);
+        return { success: false, error: true };
+    }
+};
+
+export const updateAttendance = async (
+    currentState: CurrentState,
+    data: AttendanceSchema
+) => {
+    try {
+
+        await prisma.attendance.update({
+            where: {
+                id: data.id
+            },
+            data,
+        });
+
+        // revalidatePath("/list/events");
+        return { success: true, error: false };
+    } catch (err) {
+        console.log(err);
+        return { success: false, error: true };
+    }
+};
+
+export const deleteAttendance = async (
+    currentState: CurrentState,
+    data: FormData
+) => {
+    const id = data.get("id") as string;
+
+    try {
+        await prisma.attendance.delete({
             where: {
                 id: parseInt(id),
             },

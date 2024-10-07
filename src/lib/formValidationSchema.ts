@@ -184,7 +184,7 @@ export const attendanceSchema = z.object({
     present: z.boolean({ message: "Student present is required!" }),
     date: z.coerce.date({ message: "Date is required!" }),
     studentId: z.string(),
-    classId: z.coerce.number(),
+    lessonId: z.coerce.number(),
 });
 
 export type AttendanceSchema = z.infer<typeof attendanceSchema>;
