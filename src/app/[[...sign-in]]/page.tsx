@@ -27,7 +27,7 @@ const LoginPage = () => {
                     className="bg-white p-12 rounded-md shadow-2xl flex flex-col gap-2"
                 >
                     <h1 className="text-xl font-bold flex items-center gap-2">
-                        <Image src="/logo.png" alt="" width={24} height={24} />
+                        <Image src="/web-app-manifest-512x512.png" alt="" width={24} height={24} />
                         SchoolPs
                     </h1>
                     <h2 className="text-gray-400">Sign in to your account</h2>
