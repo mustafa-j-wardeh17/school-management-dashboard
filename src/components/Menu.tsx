@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import OtherBtn from "./OtherBtn";
 
 const menuItems = [
   {
@@ -104,12 +105,12 @@ const menuItems = [
         href: "/profile",
         visible: ["admin", "teacher", "student", "parent"],
       },
-      {
-        icon: "/setting.png",
-        label: "Settings",
-        href: "/settings",
-        visible: ["admin", "teacher", "student", "parent"],
-      },
+      // {
+      //   icon: "/setting.png",
+      //   label: "Settings",
+      //   href: "/settings",
+      //   visible: ["admin", "teacher", "student", "parent"],
+      // },
       {
         icon: "/logout.png",
         label: "Logout",
@@ -135,41 +136,56 @@ export const Menu = () => {
           <span className="hidden lg:block text-gray-400 font-light my-4">
             {i.title}
           </span>
-          {i.items.map((item) => {
-            if (item.visible.includes(role)) {
-              const isActive = pathname === item.href; // Check if the current path matches the item's href
-              return (
-                <div
-                  key={`nav-${item.label}`}
-                  className="relative"
-                  onMouseEnter={() => setHoveredItem(item.label)}
-                  onMouseLeave={() => setHoveredItem(null)}
-                >
-                  {/* The link */}
-                  <Link
-                    href={item.href}
-                    className={`flex items-center justify-center lg:justify-start gap-4 text-gray-500 py-2 md:px-2 rounded-md hover:bg-mSkyLight ${isActive ? "bg-mSkyLight" : ""
-                      }`} // Add bg-mSkyLight if the link is active
-                  >
-                    <Image
-                      src={item.icon}
-                      alt={`item-${item.label}`}
-                      width={20}
-                      height={20}
+          {
+            i.items.map((item) => {
+              if (item.visible.includes(role)) {
+                const isActive = pathname === item.href; // Check if the current path matches the item's href
+                if (item.label === 'Logout' || item.label === 'Settings' || item.label === 'Profile') {
+                  return (
+                    <OtherBtn
+                      type={item.label}
+                      icon={item.icon}
+                      setHoveredItem={setHoveredItem}
+                      hoveredItem={hoveredItem}
+                      isActive={isActive}
                     />
-                    <span className="hidden lg:block">{item.label}</span>
-                  </Link>
+                  );
+                }
+                else {
+                  return (
+                    <div
+                      key={`nav-${item.label}`}
+                      className="relative"
+                      onMouseEnter={() => setHoveredItem(item.label)}
+                      onMouseLeave={() => setHoveredItem(null)}
+                    >
+                      {/* The link */}
+                      <Link
+                        href={item.href}
+                        className={`flex items-center justify-center lg:justify-start xl:gap-4 gap-2 text-gray-500 py-2 md:px-2 rounded-md hover:bg-mSkyLight ${isActive ? "bg-mSkyLight" : ""
+                          }`} // Add bg-mSkyLight if the link is active
+                      >
+                        <Image
+                          src={item.icon}
+                          alt={`item-${item.label}`}
+                          width={20}
+                          height={20}
+                        />
+                        <span className="hidden lg:block xl:text-[16px] lg:text-[14px]">{item.label}</span>
+                      </Link>
 
-                  {/* Hover title div for screens < lg */}
-                  {hoveredItem === item.label && (
-                    <div className="lg:hidden absolute z-[999] left-[40px] top-1/2 transform -translate-y-1/2 bg-gray-700 text-white text-xs px-2 py-1 rounded-md">
-                      {item.label}
+                      {/* Hover title div for screens < lg */}
+                      {hoveredItem === item.label && (
+                        <div className="lg:hidden absolute z-[999] left-[40px] top-1/2 transform -translate-y-1/2 bg-gray-700 text-white text-xs px-2 py-1 rounded-md">
+                          {item.label}
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-              );
-            }
-          })}
+                  );
+                }
+              }
+            })
+          }
         </div>
       ))}
     </div>

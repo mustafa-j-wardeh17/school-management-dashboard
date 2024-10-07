@@ -26,14 +26,14 @@ const Navbar = async ({ announcementCount }: { announcementCount: number }) => {
             </div>
             {/* Icons And User */}
             <div className='flex items-center gap-6'>
-                <div className='bg-white rounded-full w-7 h-7 flex items-center justify-center cursor-pointer' >
+                {/* <div className='bg-white rounded-full w-7 h-7 flex items-center justify-center cursor-pointer' >
                     <Image
                         src={'/message.png'}
                         alt='message img'
                         width={20}
                         height={20}
                     />
-                </div>
+                </div> */}
                 <Link href={'/list/announcements'} className='bg-white relative rounded-full w-7 h-7 flex items-center justify-center cursor-pointer' >
                     <Image
                         src={'/announcement.png'}
