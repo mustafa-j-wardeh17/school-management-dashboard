@@ -808,7 +808,7 @@ export const updateEvent = async (
 ) => {
     try {
 
-        await prisma.result.update({
+        await prisma.event.update({
             where: {
                 id: data.id
             },

@@ -102,7 +102,7 @@ const EventForm = ({
                                     key={classItem.id}
                                     value={classItem.id}
                                 >
-                                    {classItem.name} 
+                                    {classItem.name}
                                 </option>
                             ))
                         }
