@@ -148,6 +148,7 @@ export const Menu = () => {
                       setHoveredItem={setHoveredItem}
                       hoveredItem={hoveredItem}
                       isActive={isActive}
+                      key={`nav-${item.label}`}
                     />
                   );
                 }
