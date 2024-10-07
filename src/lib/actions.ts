@@ -928,7 +928,7 @@ export const updateAttendance = async (
             where: {
                 id: data.id
             },
-            data,
+            data
         });
 
         // revalidatePath("/list/events");

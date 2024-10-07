@@ -180,8 +180,7 @@ export type AnnouncementSchema = z.infer<typeof announcementSchema>;
 
 export const attendanceSchema = z.object({
     id: z.coerce.number().optional(),
-    title: z.string().min(1, { message: "Student name is required!" }),
-    present: z.boolean({ message: "Student present is required!" }),
+    present: z.coerce.boolean(),
     date: z.coerce.date({ message: "Date is required!" }),
     studentId: z.string(),
     lessonId: z.coerce.number(),

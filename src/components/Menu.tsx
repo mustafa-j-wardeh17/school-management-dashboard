@@ -162,7 +162,7 @@ export const Menu = () => {
 
                   {/* Hover title div for screens < lg */}
                   {hoveredItem === item.label && (
-                    <div className="lg:hidden absolute left-[40px] top-1/2 transform -translate-y-1/2 bg-gray-700 text-white text-xs px-2 py-1 rounded-md">
+                    <div className="lg:hidden absolute z-[999] left-[40px] top-1/2 transform -translate-y-1/2 bg-gray-700 text-white text-xs px-2 py-1 rounded-md">
                       {item.label}
                     </div>
                   )}

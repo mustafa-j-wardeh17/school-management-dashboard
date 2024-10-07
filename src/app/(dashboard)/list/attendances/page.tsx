@@ -41,7 +41,7 @@ const AttendanceListPage = async ({ searchParams }: {
             accessor: "date",
             className: "sm:table-cell hidden",
         },
-        ...(role === "admin"
+        ...((role === "admin" || role === 'teacher')
             ? [{
                 header: "Actions",
                 accessor: "actions",
@@ -174,7 +174,7 @@ const AttendanceListPage = async ({ searchParams }: {
                             />
                         </button>
                         {
-                            role === 'admin' && (
+                            (role === 'admin' || role === 'teacher') && (
                                 <FormContainer
                                     table='attendance'
                                     type='create'

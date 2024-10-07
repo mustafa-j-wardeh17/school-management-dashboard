@@ -8,7 +8,6 @@ import { useFormState } from 'react-dom';
 import { createAttendance, updateAttendance } from '@/lib/actions';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
-import { Attendance } from '@prisma/client';
 
 
 
@@ -41,6 +40,7 @@ const AttendanceForm = ({
     );
 
     const onSubmit = handleSubmit((data) => {
+        console.log(data)
         formAction(data);
     });
 
@@ -66,7 +66,7 @@ const AttendanceForm = ({
                 <InputField
                     label='Date'
                     name='date'
-                    defaultValue={data?.date}
+                    defaultValue={data?.date ? new Date(data.date).toISOString().split('T')[0] : ''}
                     register={register}
                     error={errors.date}
                     type='date'
@@ -106,38 +106,55 @@ const AttendanceForm = ({
                             {errors.lessonId?.message.toString()}
                         </p>
                     }
+                </div>
 
-                    <div className='flex flex-col gap-2 w-full md:w-1/4'>
-                        <label className='text-xs text-gray-500'>Student</label>
-                        <select
-                            defaultValue={data?.studentId}
-                            {...register('studentId')}
-                            className='ring-[1.5px] ring-gray-100 p-2 rounded-md text-sm w-full'
-                        >
-                            {
-                                students.map((student: { id: string, name: string, surname: string }) => (
-                                    <option
-                                        key={student.id}
-                                        value={student.id}
-                                    >
-                                        {student.name + " " + student.surname}
-                                    </option>
-                                ))
-                            }
-                        </select>
+                <div className='flex flex-col gap-2 w-full md:w-1/4'>
+                    <label className='text-xs text-gray-500'>Student</label>
+                    <select
+                        defaultValue={data?.studentId}
+                        {...register('studentId')}
+                        className='ring-[1.5px] ring-gray-100 p-2 rounded-md text-sm w-full'
+                    >
                         {
-                            errors.studentId?.message &&
-                            <p className='text-red-400 text-xs'>
-                                {errors.studentId?.message.toString()}
-                            </p>
+                            students.map((student: { id: string, name: string, surname: string }) => (
+                                <option
+                                    key={student.id}
+                                    value={student.id}
+                                >
+                                    {student.name + " " + student.surname}
+                                </option>
+                            ))
                         }
-                    </div>
-
-
+                    </select>
+                    {
+                        errors.studentId?.message &&
+                        <p className='text-red-400 text-xs'>
+                            {errors.studentId?.message.toString()}
+                        </p>
+                    }
+                </div>
+                <div className='flex flex-col gap-2 w-full md:w-1/4'>
+                    <label className='text-xs text-gray-500'>Present</label>
+                    <select
+                        defaultValue={data?.present ? 'true' : 'false'}  // Handle boolean to string conversion
+                        {...register('present')}
+                        className='ring-[1.5px] ring-gray-100 p-2 rounded-md text-sm w-full'
+                    >
+                        <option value="true">true</option>
+                        <option value="false">false</option>
+                    </select>
+                    {
+                        errors.present?.message &&
+                        <p className='text-red-400 text-xs'>
+                            {errors.present?.message.toString()}
+                        </p>
+                    }
                 </div>
             </div>
 
-
+            {state.error && (
+                <span className="text-red-500">Something went wrong!</span>
+            )}
             <button className='bg-blue-400 text-white p-2 rounded-md'>{type === 'create' ? 'Create' : 'Update'}</button>
         </form>
     )

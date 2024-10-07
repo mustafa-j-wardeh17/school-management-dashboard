@@ -146,9 +146,14 @@ const FormContainer = async ({ table, type, data, id }: FormContainerProps) => {
             case "attendance":
                 const attendanceStudents = await prisma.student.findMany({
                     where: {
-                        class: {
-                            supervisorId: currentUserId!
-                        }
+                        ...(role === "teacher"
+                            ? {
+                                class: {
+                                    supervisorId: currentUserId!,
+                                }
+                            }
+                            : {}
+                        )
                     },
                     select: {
                         id: true,
@@ -165,7 +170,6 @@ const FormContainer = async ({ table, type, data, id }: FormContainerProps) => {
                             : {}
                         )
                     },
-
                     select: {
                         id: true,
                         name: true,

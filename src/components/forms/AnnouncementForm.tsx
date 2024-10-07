@@ -2,12 +2,10 @@
 import React, { Dispatch, SetStateAction, useEffect } from 'react'
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import InputField from '../InputField';
-import Image from 'next/image';
-import { announcementSchema, AnnouncementSchema, eventSchema, EventSchema } from '@/lib/formValidationSchema';
+import { announcementSchema, AnnouncementSchema } from '@/lib/formValidationSchema';
 import { useFormState } from 'react-dom';
-import { createAnnouncement, createEvent, updateAnnouncement, updateEvent } from '@/lib/actions';
+import { createAnnouncement, updateAnnouncement } from '@/lib/actions';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 
