@@ -20,7 +20,8 @@ const LoginPage = () => {
     }, [user, router]);
 
     return (
-        <div className="h-screen flex items-center justify-center bg-mSkyLight">
+        <div className="h-screen relative flex items-center justify-center bg-mSkyLight">
+            <LoginHint />
             <SignIn.Root>
                 <SignIn.Step
                     name="start"
@@ -74,5 +75,39 @@ const LoginPage = () => {
         </div>
     );
 };
+
+import React from 'react';
+
+const LoginHint = () => {
+    return (
+        <div className="absolute bottom-10 right-10 md:right-16 bg-white/90  backdrop-blur-md p-3 rounded-lg shadow-lg max-w-xs md:max-w-sm">
+            <p className="text-center text-gray-800 font-semibold mb-2">Test User Credentials</p>
+            <ul className="text-gray-600 text-sm grid grid-cols-2 gap-2">
+                <li>
+                    <strong>Admin:</strong>
+                    <br />
+                    <code>admin / admin</code>
+                </li>
+                <li>
+                    <strong>Teacher:</strong>
+                    <br />
+                    <code>teacher / teacher</code>
+                </li>
+                <li>
+                    <strong>Parent:</strong>
+                    <br />
+                    <code>parent / parent</code>
+                </li>
+                <li>
+                    <strong>Student:</strong>
+                    <br />
+                    <code>student / student</code>
+                </li>
+            </ul>
+        </div>
+    );
+};
+
+
 
 export default LoginPage;
