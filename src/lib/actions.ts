@@ -265,12 +265,26 @@ export const deleteLesson = async (
                     lessonId: parseInt(id),
                 },
             });
+            await prisma.result.deleteMany({
+                where: {
+                    exam: {
+                        lessonId: parseInt(id)
+                    }
+                },
+            });
         }
 
         if (assignmentCount > 0) {
             await prisma.assignment.deleteMany({
                 where: {
                     lessonId: parseInt(id),
+                },
+            });
+            await prisma.result.deleteMany({
+                where: {
+                    assignment: {
+                        lessonId: parseInt(id)
+                    }
                 },
             });
         }
