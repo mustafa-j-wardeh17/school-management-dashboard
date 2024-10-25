@@ -64,11 +64,94 @@ export const deleteSubject = async (
 ) => {
     const id = data.get('id') as string
     try {
+        // Check for related lessons, assignments, exams, and attendance records
+        const [lessons, assignments, exams] = await Promise.all([
+            prisma.lesson.findMany({
+                where: {
+                    subjectId: parseInt(id),
+                },
+                select: { id: true }, // Only get the lesson IDs
+            }),
+            prisma.assignment.findMany({
+                where: {
+                    lesson: {
+                        subjectId: parseInt(id)
+                    },
+                },
+                select: { id: true }, // Only get the assignment IDs
+            }),
+            prisma.exam.findMany({
+                where: {
+                    lesson: {
+                        subjectId: parseInt(id)
+                    },
+                },
+                select: { id: true }, // Only get the exam IDs
+            })
+        ]);
+
+        // Delete attendance records for each lesson
+        if (lessons.length > 0) {
+            await prisma.attendance.deleteMany({
+                where: {
+                    lessonId: {
+                        in: lessons.map(lesson => lesson.id),
+                    },
+                },
+
+            });
+        }
+
+        // Delete results for each exam
+        if (exams.length > 0) {
+            await prisma.result.deleteMany({
+                where: {
+                    examId: {
+                        in: exams.map(exam => exam.id),
+                    },
+                },
+            });
+            await prisma.exam.deleteMany({
+                where: {
+                    id: {
+                        in: exams.map(exam => exam.id)
+                    }
+                },
+            });
+        }
+
+        // Delete results for each assignment
+        if (assignments.length > 0) {
+            await prisma.result.deleteMany({
+                where: {
+                    assignmentId: {
+                        in: assignments.map(assignment => assignment.id),
+                    },
+                },
+            });
+            await prisma.assignment.deleteMany({
+                where: {
+                    id: {
+                        in: assignments.map(assignment => assignment.id)
+                    }
+                },
+            });
+        }
+
+        if (lessons.length > 0) {
+            await prisma.lesson.deleteMany({
+                where: {
+                    subjectId: parseInt(id),
+                },
+            });
+        }
+
+
         await prisma.subject.delete({
             where: {
-                id: parseInt(id)
+                id: parseInt(id),
             },
-        })
+        });
         return {
             success: true,
             error: false
