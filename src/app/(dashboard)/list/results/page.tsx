@@ -19,7 +19,8 @@ export type ResultList = {
     teacherSurName: string,
     score: string,
     className: string,
-    startTime: Date
+    startTime: Date,
+    subject: string
 }
 
 const ResultsListPage = async ({ searchParams }: {
@@ -46,10 +47,16 @@ const ResultsListPage = async ({ searchParams }: {
             className: "sm:table-cell hidden",
         },
         {
+            header: "Subject",
+            accessor: "subject",
+            className: "sm:table-cell hidden",
+        },
+        {
             header: "Teacher",
             accessor: "teacher",
             className: "sm:table-cell hidden",
         },
+
         {
             header: "Class",
             accessor: "class",
@@ -82,6 +89,7 @@ const ResultsListPage = async ({ searchParams }: {
             </td>
             <td className="hidden sm:table-cell text-xs">{item?.studentName + " " + item?.studentSurName}</td>
             <td className="hidden sm:table-cell text-xs">{item?.score}</td>
+            <td className="hidden sm:table-cell text-xs">{item?.subject}</td>
             <td className="hidden sm:table-cell text-xs">{item?.teacherName + " " + item?.teacherSurName}</td>
             <td className="hidden sm:table-cell text-xs">{item?.className}</td>
             <td className="table-cell text-xs">
@@ -169,7 +177,8 @@ const ResultsListPage = async ({ searchParams }: {
                         lesson: {
                             select: {
                                 class: { select: { name: true } },
-                                teacher: { select: { name: true, surname: true } }
+                                teacher: { select: { name: true, surname: true } },
+                                subject: { select: { name: true } },
                             }
                         }
                     }
@@ -179,7 +188,8 @@ const ResultsListPage = async ({ searchParams }: {
                         lesson: {
                             select: {
                                 class: { select: { name: true } },
-                                teacher: { select: { name: true, surname: true } }
+                                teacher: { select: { name: true, surname: true } },
+                                subject: { select: { name: true } },
                             }
                         }
                     }
@@ -205,7 +215,8 @@ const ResultsListPage = async ({ searchParams }: {
             teacherSurName: assessment.lesson.teacher.surname,
             score: item?.score,
             className: assessment.lesson.class.name,
-            startTime: isExam ? assessment.startTime : assessment.startDate
+            startTime: isExam ? assessment.startTime : assessment.startDate,
+            subject: isExam ? assessment.lesson.subject.name : assessment.lesson.subject.name
         }
     });
     return (

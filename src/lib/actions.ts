@@ -148,15 +148,61 @@ export const deleteLesson = async (
 ) => {
     const id = data.get('id') as string
     try {
+        // Check for related exams, assignments, and attendance records
+        const [attendanceCount, examCount, assignmentCount] = await Promise.all([
+            prisma.attendance.count({
+                where: {
+                    lessonId: parseInt(id),
+                },
+            }),
+            prisma.exam.count({
+                where: {
+                    lessonId: parseInt(id),
+                },
+            }),
+            prisma.assignment.count({
+                where: {
+                    lessonId: parseInt(id),
+                },
+            }),
+        ]);
+
+        // If there are related records, delete them first
+        if (attendanceCount > 0) {
+            await prisma.attendance.deleteMany({
+                where: {
+                    lessonId: parseInt(id),
+                },
+            });
+        }
+
+        if (examCount > 0) {
+            await prisma.exam.deleteMany({
+                where: {
+                    lessonId: parseInt(id),
+                },
+            });
+        }
+
+        if (assignmentCount > 0) {
+            await prisma.assignment.deleteMany({
+                where: {
+                    lessonId: parseInt(id),
+                },
+            });
+        }
+
+        // Finally, delete the lesson
         await prisma.lesson.delete({
             where: {
-                id: parseInt(id)
+                id: parseInt(id),
             },
-        })
+        });
+
         return {
             success: true,
-            error: false
-        }
+            error: false,
+        };
     } catch (error) {
         console.log(error)
         return {
