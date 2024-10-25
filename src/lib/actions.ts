@@ -610,6 +610,11 @@ export const deleteExam = async (
     const id = data.get("id") as string;
 
     try {
+        await prisma.result.deleteMany({
+            where: {
+                examId: parseInt(id),
+            },
+        });
         await prisma.exam.delete({
             where: {
                 id: parseInt(id),
@@ -680,6 +685,11 @@ export const deleteAssignment = async (
     const id = data.get("id") as string;
 
     try {
+        await prisma.result.deleteMany({
+            where: {
+                assignmentId: parseInt(id),
+            },
+        });
         await prisma.assignment.delete({
             where: {
                 id: parseInt(id),
