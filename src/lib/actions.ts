@@ -640,6 +640,16 @@ export const deleteStudent = async (
     try {
         await clerkClient.users.deleteUser(id);
 
+        await prisma.attendance.deleteMany({
+            where: {
+                studentId:id
+            },
+        });
+        await prisma.result.deleteMany({
+            where: {
+                studentId:id
+            },
+        });
         await prisma.student.delete({
             where: {
                 id: id,
