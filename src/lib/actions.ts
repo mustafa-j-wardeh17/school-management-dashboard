@@ -642,12 +642,12 @@ export const deleteStudent = async (
 
         await prisma.attendance.deleteMany({
             where: {
-                studentId:id
+                studentId: id
             },
         });
         await prisma.result.deleteMany({
             where: {
-                studentId:id
+                studentId: id
             },
         });
         await prisma.student.delete({
@@ -748,7 +748,34 @@ export const deleteParent = async (
     const id = data.get("id") as string;
     try {
         await clerkClient.users.deleteUser(id);
-
+        const parentStudents = await prisma.student.findMany({
+            where: {
+                parentId: id
+            }
+        })
+        if (parentStudents.length > 0) {
+            await prisma.attendance.deleteMany({
+                where: {
+                    studentId: {
+                        in: parentStudents.map(student => student.id)
+                    }
+                }
+            })
+            await prisma.result.deleteMany({
+                where: {
+                    studentId: {
+                        in: parentStudents.map(student => student.id)
+                    }
+                }
+            })
+            await prisma.student.deleteMany({
+                where: {
+                    id: {
+                        in: parentStudents.map(student => student.id)
+                    }
+                }
+            })
+        }
         await prisma.parent.delete({
             where: {
                 id
