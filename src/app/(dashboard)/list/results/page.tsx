@@ -71,21 +71,21 @@ const ResultsListPage = async ({ searchParams }: {
 
     const renderRow = (item: ResultList) => (
         <tr
-            key={item.id}
+            key={item?.id}
             className='border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-mPurpleLight'
         >
             <td className='flex items-center gap-4 p-4'>
 
                 <div className='flex flex-col'>
-                    <h3 className='font-semibold'>{item.title}</h3>
+                    <h3 className='font-semibold'>{item?.title}</h3>
                 </div>
             </td>
-            <td className="hidden sm:table-cell text-xs">{item.studentName + " " + item.studentSurName}</td>
-            <td className="hidden sm:table-cell text-xs">{item.score}</td>
-            <td className="hidden sm:table-cell text-xs">{item.teacherName + " " + item.teacherSurName}</td>
-            <td className="hidden sm:table-cell text-xs">{item.className}</td>
+            <td className="hidden sm:table-cell text-xs">{item?.studentName + " " + item?.studentSurName}</td>
+            <td className="hidden sm:table-cell text-xs">{item?.score}</td>
+            <td className="hidden sm:table-cell text-xs">{item?.teacherName + " " + item?.teacherSurName}</td>
+            <td className="hidden sm:table-cell text-xs">{item?.className}</td>
             <td className="table-cell text-xs">
-                {new Intl.DateTimeFormat('en-US').format(item.startTime)}
+                {new Intl.DateTimeFormat('en-US').format(item?.startTime)}
             </td>
             <td>
                 <div className='flex items-center gap-2'>
@@ -100,7 +100,7 @@ const ResultsListPage = async ({ searchParams }: {
                                 <FormContainer
                                     table='result'
                                     type='delete'
-                                    id={item.id}
+                                    id={item?.id}
                                 />
                             </>
 
@@ -193,17 +193,17 @@ const ResultsListPage = async ({ searchParams }: {
 
 
     const data = dataRes.map(item => {
-        const assessment = item.exam || item.assignment
+        const assessment = item?.exam || item?.assignment
         if (!assessment) return null
         const isExam = "startTime" in assessment;
         return {
-            id: item.id,
+            id: item?.id,
             title: assessment.title,
-            studentName: item.student.name,
-            studentSurName: item.student.surname,
+            studentName: item?.student.name,
+            studentSurName: item?.student.surname,
             teacherName: assessment.lesson.teacher.name,
             teacherSurName: assessment.lesson.teacher.surname,
-            score: item.score,
+            score: item?.score,
             className: assessment.lesson.class.name,
             startTime: isExam ? assessment.startTime : assessment.startDate
         }

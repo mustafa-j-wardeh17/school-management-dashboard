@@ -208,13 +208,68 @@ export const deleteClass = async (
     data: FormData
 ) => {
     const id = data.get("id") as string;
+    const classId = parseInt(id);
+
     try {
-        await prisma.class.delete({
+
+        // Delete Attendance records related to the students in the class
+        await prisma.attendance.deleteMany({
             where: {
-                id: parseInt(id),
-            },
+                student: {
+                    classId
+                }
+            }
+        });
+        // Step 2: Delete Result records related to students in the class
+        await prisma.result.deleteMany({
+            where: {
+                student: {
+                    classId
+                }
+            }
+        });
+        await prisma.exam.deleteMany({
+            where: {
+                lesson: {
+                    classId
+                }
+            }
+        });
+        await prisma.assignment.deleteMany({
+            where: {
+                lesson: {
+                    classId
+                }
+            }
+        });
+        // Delete Student records in the class
+        await prisma.student.deleteMany({
+            where: { classId }
+        });
+        await prisma.grade.deleteMany({
+            where: {
+                classess: {
+                    every: {
+                        id: classId
+                    }
+                }
+            }
+        })
+        // Delete related Lessons, Events, Announcements, etc., associated with the Class
+        await prisma.lesson.deleteMany({
+            where: { classId }
+        });
+        await prisma.event.deleteMany({
+            where: { classId }
+        });
+        await prisma.announcement.deleteMany({
+            where: { classId }
         });
 
+        // Finally, delete the Class itself
+        await prisma.class.delete({
+            where: { id: classId }
+        });
         // revalidatePath("/list/classes");
         return { success: true, error: false };
     } catch (err) {
