@@ -260,11 +260,6 @@ export const deleteLesson = async (
         }
 
         if (examCount > 0) {
-            await prisma.exam.deleteMany({
-                where: {
-                    lessonId: parseInt(id),
-                },
-            });
             await prisma.result.deleteMany({
                 where: {
                     exam: {
@@ -272,14 +267,15 @@ export const deleteLesson = async (
                     }
                 },
             });
-        }
-
-        if (assignmentCount > 0) {
-            await prisma.assignment.deleteMany({
+            await prisma.exam.deleteMany({
                 where: {
                     lessonId: parseInt(id),
                 },
             });
+
+        }
+
+        if (assignmentCount > 0) {
             await prisma.result.deleteMany({
                 where: {
                     assignment: {
@@ -287,6 +283,12 @@ export const deleteLesson = async (
                     }
                 },
             });
+            await prisma.assignment.deleteMany({
+                where: {
+                    lessonId: parseInt(id),
+                },
+            });
+
         }
 
         // Finally, delete the lesson
